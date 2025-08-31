@@ -151,6 +151,7 @@ export default function Alerts() {
         {alerts.map(a => {
           const p = a.author_id ? profiles[a.author_id] : undefined
           const mine = me && a.author_id === me
+          const canDelete = !!mine || isMod
           return (
             <li key={a.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
@@ -172,12 +173,20 @@ export default function Alerts() {
               </div>
 
               <div style={{marginTop:8,display:'flex',gap:8}}>
-                {mine && <button onClick={()=>deleteAlert(a.id)}>Delete</button>}
-                {isMod && (
-                  <button onClick={()=>togglePriority(a)}>
-                    {a.priority === 1 ? 'Unmark High Priority' : 'Mark High Priority'}
-                  </button>
-                )}
+                {canDelete && (
+              <button
+              onClick={() => {
+                if (confirm('Delete this alert?')) deleteAlert(a.id)
+      }}
+  >
+            Delete
+            </button>
+      )}
+      {isMod && (
+        <button onClick={() => togglePriority(a)}>
+        {a.priority === 1 ? 'Unmark High Priority' : 'Mark High Priority'}
+        </button>
+      )}
               </div>
             </li>
           )

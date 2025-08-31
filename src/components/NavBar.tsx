@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 
+
 export default function NavBar() {
   const { pathname } = useLocation()
   const link = (to: string, label: string) => (
@@ -23,6 +24,8 @@ export default function NavBar() {
       {link('/alerts', 'Alerts')}
       {link('/events', 'Events')}
       {link('/profile', 'Profile')}
+      {link('/businesses', 'Businesses')}
+
     </nav>
   )
 }

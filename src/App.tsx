@@ -6,7 +6,9 @@ import Feed from './pages/Feed'
 import Alerts from './pages/Alerts'
 import Events from './pages/Events'
 import Profile from './pages/Profile'
+import Businesses from './pages/Businesses'
 import './App.css'
+
 
 export default function App() {
   return (
@@ -18,6 +20,7 @@ export default function App() {
           <Route path="/" element={<Feed />} />
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/events" element={<Events />} />
+          <Route path="/businesses" element={<Businesses />} />
           <Route path="/profile" element={<Profile />} /> 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
