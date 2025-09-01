@@ -1,15 +1,137 @@
-# Dependencies
+# ----------------------------
+# Node / package managers
+# ----------------------------
 node_modules/
-
-# Build output
-dist/
-build/
-
-# Logs
 npm-debug.log*
+yarn.lock
+pnpm-lock.yaml
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# Environment variables
+# Keep your npm lockfile tracked (best practice)
+# (Do NOT ignore package-lock.json)
+
+# ----------------------------
+# Build outputs (frontend frameworks)
+# ----------------------------
+dist/
+build/
+out/
+.next/
+.nuxt/
+.svelte-kit/
+
+# ----------------------------
+# Caches / tooling
+# ----------------------------
+.cache/
+.parcel-cache/
+.esbuild/
+.astro/
+.tmp/
+temp/
+tmp/
+*.tsbuildinfo
+
+# ----------------------------
+# Coverage
+# ----------------------------
+coverage/
+.nyc_output/
+lcov-report/
+
+# ----------------------------
+# Logs
+# ----------------------------
+logs/
+*.log
+
+# ----------------------------
+# OS cruft
+# ----------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+
+# ----------------------------
+# Editors / IDE
+# ----------------------------
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.iml
+
+# ----------------------------
+# Firebase
+# ----------------------------
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+.runtimeconfig.json
+# Cloud Functions (if used)
+functions/node_modules/
+functions/lib/
+functions/dist/
+functions/.env*
+
+# ----------------------------
+# Supabase (local dev)
+# ----------------------------
+supabase/.temp/
+supabase/.branches/
+supabase/.logs/
+supabase/.studio/
+supabase/.env
+supabase/.secrets
+supabase/docker/volumes/
+supabase/migrations/*-shadow.sql
+
+# ----------------------------
+# Environment & secrets
+# ----------------------------
 .env
+.env.*
+!.env.example
+.env.fhrs
 .env.local
+.env.osm
+
+# ----------------------------
+# Local data / outputs
+# ----------------------------
+Business_csv/
+data/
+uploads/
+screenshots/
+**/*.local.*
+*.local.json
+
+# ----------------------------
+# Playwright / Cypress
+# ----------------------------
+playwright-report/
+test-results/
+blob-report/
+.cache/ms-playwright/
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# ----------------------------
+# Misc
+# ----------------------------
+*.local
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+*.rej
+
+# ----------------------------
+# OS trash
+# ----------------------------
+.Trashes
