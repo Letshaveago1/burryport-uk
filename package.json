@@ -6,6 +6,7 @@
   "scripts": {
     "import:osm": "cross-env DOTENV_CONFIG_PATH=.env.osm node -r dotenv/config scripts/import_osm.js",
     "import:fhrs": "cross-env DOTENV_CONFIG_PATH=.env.fhrs node -r dotenv/config scripts/import_fhrs.js",
+    "new:day": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/new-day.ps1",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
