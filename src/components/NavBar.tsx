@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom'
-
+import { useAuth } from './AuthProvider'
 
 export default function NavBar() {
   const { pathname } = useLocation()
+  const { isModerator } = useAuth()
   const link = (to: string, label: string) => (
     <Link
       to={to}
@@ -23,9 +24,9 @@ export default function NavBar() {
       {link('/', 'Feed')}
       {link('/alerts', 'Alerts')}
       {link('/events', 'Events')}
-      {link('/profile', 'Profile')}
       {link('/businesses', 'Businesses')}
-
+      {link('/profile', 'Profile')}
+      {isModerator && link('/admin', 'Admin')}
     </nav>
   )
 }
