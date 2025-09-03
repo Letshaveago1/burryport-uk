@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+// src/pages/Businesses.tsx
+import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../components/AuthProvider'
 
@@ -29,6 +30,19 @@ function ensureHttp(u?: string | null) {
   return `https://${u}`
 }
 
+// --- new helpers to guard image URLs ---
+function isSafeHttpUrl(u?: string | null) {
+  if (!u) return false
+  try {
+    const x = new URL(u)
+    return x.protocol === 'http:' || x.protocol === 'https:'
+  } catch { return false }
+}
+function looksTruncated(u: string) {
+  // common truncation characters from copy/paste
+  return u.includes('…') || u.includes('...')
+}
+
 export default function Businesses(){
   const { ready, session } = useAuth()
   const me = session?.user?.id ?? null
@@ -40,7 +54,6 @@ export default function Businesses(){
 
   async function load() {
     try {
-      // only approved for the public
       const { data, error } = await supabase
         .from('businesses')
         .select('id,name,category,address,website,phone,images,owner_id,status,created_at')
@@ -50,7 +63,6 @@ export default function Businesses(){
       if (error) throw error
       setRows((data || []) as Biz[])
 
-      // if logged in, fetch my pending claims to disable the button
       if (me) {
         const { data: claims } = await supabase
           .from('business_claims')
@@ -67,10 +79,7 @@ export default function Businesses(){
     } catch (e) { showErr(e) }
   }
 
-  useEffect(() => {
-    if (!ready) return
-    load()
-  }, [ready]) // eslint-disable-line
+  useEffect(() => { if (ready) load() }, [ready]) // eslint-disable-line
 
   async function claim(b: Biz) {
     try {
@@ -92,10 +101,11 @@ export default function Businesses(){
 
       <ul style={{ listStyle:'none', padding:0, display:'grid', gap:12 }}>
         {rows.map(b => {
-          const cover = Array.isArray(b.images) && b.images[0]?.url
-          const site  = ensureHttp(b.website)
+          const cover0 = Array.isArray(b.images) && b.images[0]?.url
+          const cover  = cover0 && isSafeHttpUrl(cover0) && !looksTruncated(cover0) ? cover0 : null
+          const site   = ensureHttp(b.website)
           const canClaim = !b.owner_id && !!me && !myClaims[b.id]
-          const youOwn = b.owner_id === me
+          const youOwn   = b.owner_id === me
           const yourClaim = myClaims[b.id]
 
           return (
@@ -103,8 +113,13 @@ export default function Businesses(){
               <div style={{ display:'grid', gridTemplateColumns:'120px 1fr', gap:12 }}>
                 <div style={{ background:'#f3f4f6' }}>
                   {cover ? (
-                    <img src={cover} alt={b.images![0].alt ?? b.name}
-                         style={{ width:'100%', height:100, objectFit:'cover', display:'block' }} />
+                    <img
+                      src={cover}
+                      alt={b.images![0].alt ?? b.name}
+                      style={{ width:'100%', height:100, objectFit:'cover', display:'block' }}
+                      // if the URL 404s, just hide the image box
+                      onError={(e:any)=>{ e.currentTarget.style.display='none' }}
+                    />
                   ) : <div style={{ width:'100%', height:100 }} />}
                 </div>
                 <div style={{ padding:10 }}>
@@ -112,7 +127,7 @@ export default function Businesses(){
                   <div style={{ fontSize:12, opacity:0.75 }}>{b.category || '—'}</div>
                   {b.address && <div style={{ fontSize:12, opacity:0.85, marginTop:4 }}>{b.address}</div>}
                   <div style={{ display:'flex', gap:8, marginTop:6 }}>
-                    {site && <a href={site} target="_blank" rel="noreferrer">Website</a>}
+                    {site && <a href={site} target="_blank" rel="noreferrer noopener">Website</a>}
                     {b.phone && <a href={`tel:${b.phone.replace(/\s+/g,'')}`}>Call</a>}
                   </div>
 
@@ -122,7 +137,7 @@ export default function Businesses(){
                       <span style={{ fontSize:12, color:'#b45309' }}>Your claim is pending review</span>
                     )}
                     {!youOwn && canClaim && (
-                      <button onClick={() => claim(b)}>Claim this business</button>
+                      <button onClick={() => claim(b)} aria-label={`Claim ${b.name}`}>Claim this business</button>
                     )}
                   </div>
                 </div>

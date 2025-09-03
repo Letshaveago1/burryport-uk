@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useId } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
 type EventRow = {
@@ -29,6 +29,13 @@ export default function Events() {
   const [ends, setEnds] = useState('')
   const [link, setLink] = useState('')
   const [creating, setCreating] = useState(false)
+
+  const idTitle = useId()
+  const idDesc = useId()
+  const idVenue = useId()
+  const idStarts = useId()
+  const idEnds = useId()
+  const idLink = useId()
 
   const showErr = (e:any)=> setErr(e?.message ?? String(e))
 
@@ -123,27 +130,41 @@ export default function Events() {
 
       {/* create form */}
       <div style={{display:'grid',gap:8,margin:'12px 0'}}>
-        <input placeholder="Event title" value={title} onChange={e=>setTitle(e.target.value)} />
-        <textarea placeholder="Description" value={desc} onChange={e=>setDesc(e.target.value)} />
-        <input placeholder="Venue" value={venue} onChange={e=>setVenue(e.target.value)} />
-        <label>Starts at</label>
-        <input type="datetime-local" value={starts} onChange={e=>setStarts(e.target.value)} />
-        <label>Ends at (optional)</label>
-        <input type="datetime-local" value={ends} onChange={e=>setEnds(e.target.value)} />
-        <input placeholder="Link (optional)" value={link} onChange={e=>setLink(e.target.value)} />
-        <button disabled={!me || creating} onClick={createEvent}>{creating ? 'Creating…' : 'Create event'}</button>
+        <label htmlFor={idTitle}>Event title</label>
+        <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Beach Clean" />
+
+        <label htmlFor={idDesc}>Description</label>
+        <textarea id={idDesc} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What’s happening?" />
+
+        <label htmlFor={idVenue}>Venue</label>
+        <input id={idVenue} value={venue} onChange={e=>setVenue(e.target.value)} placeholder="e.g. Harbour Square" />
+
+        <label htmlFor={idStarts}>Starts at</label>
+        <input id={idStarts} type="datetime-local" value={starts} onChange={e=>setStarts(e.target.value)} />
+
+        <label htmlFor={idEnds}>Ends at (optional)</label>
+        <input id={idEnds} type="datetime-local" value={ends} onChange={e=>setEnds(e.target.value)} />
+
+        <label htmlFor={idLink}>Link (optional)</label>
+        <input id={idLink} type="url" value={link} onChange={e=>setLink(e.target.value)} placeholder="https://…" />
+
+        <button type="button" disabled={!me || creating} onClick={createEvent} aria-busy={creating}>
+          {creating ? 'Creating…' : 'Create event'}
+        </button>
       </div>
 
       {/* list */}
       <ul style={{listStyle:'none',padding:0,display:'grid',gap:12}}>
         {events.map(ev => {
           const p = ev.organizer_id ? profiles[ev.organizer_id] : undefined
+          const alt = p?.username ? `${p.username}'s avatar` : 'Organizer avatar'
           return (
             <li key={ev.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <img
                   src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
-                  alt="" style={{width:28,height:28,borderRadius:'50%',objectFit:'cover',background:'#eee'}}
+                  alt={alt}
+                  style={{width:28,height:28,borderRadius:'50%',objectFit:'cover',background:'#eee'}}
                 />
                 <div>
                   <div style={{fontWeight:600}}>{ev.title}</div>
@@ -162,7 +183,7 @@ export default function Events() {
               {/* owner controls */}
               {me && ev.organizer_id === me && (
                 <div style={{marginTop:8}}>
-                  <button onClick={()=>deleteEvent(ev.id)}>Delete</button>
+                  <button type="button" onClick={()=>deleteEvent(ev.id)} aria-label={`Delete event ${ev.title}`}>Delete</button>
                 </div>
               )}
             </li>
@@ -170,7 +191,7 @@ export default function Events() {
         })}
       </ul>
 
-      {err && <div style={{color:'#b00020'}}>{err}</div>}
+      {err && <div style={{color:'#b00020'}} aria-live="polite">{err}</div>}
     </div>
   )
 }

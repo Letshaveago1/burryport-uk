@@ -171,9 +171,23 @@ export default function Admin(){
     <div style={{ maxWidth: 1000, margin: '24px auto' }}>
       <h2>Admin</h2>
 
-      <div style={{ display:'flex', gap:8, margin:'12px 0' }}>
-        <button onClick={() => setTab('biz')} disabled={tab==='biz'}>Businesses to review</button>
-        <button onClick={() => setTab('claims')} disabled={tab==='claims'}>Pending claims</button>
+      <div role="tablist" aria-label="Admin sections" style={{ display:'flex', gap:8, margin:'12px 0' }}>
+        <button
+          role="tab"
+          aria-selected={tab==='biz'}
+          onClick={() => setTab('biz')}
+          disabled={tab==='biz'}
+        >
+          Businesses to review
+        </button>
+        <button
+          role="tab"
+          aria-selected={tab==='claims'}
+          onClick={() => setTab('claims')}
+          disabled={tab==='claims'}
+        >
+          Pending claims
+        </button>
         <button onClick={() => { loadPendingBiz(); loadClaims() }} disabled={busy} style={{ marginLeft:'auto' }}>
           Refresh
         </button>
@@ -189,8 +203,11 @@ export default function Admin(){
                 <div style={{ display:'grid', gridTemplateColumns:'160px 1fr', gap:12 }}>
                   <div style={{ background:'#f3f4f6' }}>
                     {cover ? (
-                      <img src={cover} alt={b.images![0].alt ?? b.name}
-                           style={{ width:'100%', height:120, objectFit:'cover', display:'block' }} />
+                      <img
+                        src={cover}
+                        alt={b.images![0].alt ?? `${b.name} cover`}
+                        style={{ width:'100%', height:120, objectFit:'cover', display:'block' }}
+                      />
                     ) : <div style={{ width:'100%', height:120 }} />}
                   </div>
                   <div style={{ padding:10 }}>
@@ -202,8 +219,22 @@ export default function Admin(){
                       {b.phone && <a href={`tel:${b.phone.replace(/\s+/g,'')}`}>Call</a>}
                     </div>
                     <div style={{ display:'flex', gap:8, marginTop:8 }}>
-                      <button disabled={busy} onClick={() => setBusinessStatus(b.id, 'approved')}>Approve</button>
-                      <button disabled={busy} onClick={() => setBusinessStatus(b.id, 'rejected')}>Reject</button>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setBusinessStatus(b.id, 'approved')}
+                        aria-label={`Approve ${b.name}`}
+                      >
+                        Approve
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setBusinessStatus(b.id, 'rejected')}
+                        aria-label={`Reject ${b.name}`}
+                      >
+                        Reject
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -219,21 +250,38 @@ export default function Admin(){
           {claims.map(c => {
             const b = bizMap[c.business_id]
             const p = profiles[c.claimant_id]
+            const alt = p?.username ? `${p.username}'s avatar` : 'Claimant avatar'
             return (
               <li key={c.id} style={{ border:'1px solid #e5e7eb', borderRadius:10, padding:10 }}>
                 <div style={{ display:'flex', gap:10 }}>
                   <img
                     src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
-                    alt="" style={{ width:36, height:36, borderRadius:'50%', objectFit:'cover', background:'#eee' }}
+                    alt={alt}
+                    style={{ width:36, height:36, borderRadius:'50%', objectFit:'cover', background:'#eee' }}
                   />
                   <div style={{ flex:1 }}>
                     <div style={{ fontWeight:700 }}>{b ? b.name : `Business #${c.business_id}`}</div>
                     <div style={{ fontSize:12, opacity:0.7 }}>
                       claimant: {p?.username ? `@${p.username}` : c.claimant_id.slice(0,8)} · {new Date(c.created_at).toLocaleString()}
                     </div>
+                    {c.message && <div style={{ marginTop: 6, whiteSpace: 'pre-wrap' }}>{c.message}</div>}
                     <div style={{ display:'flex', gap:8, marginTop:8 }}>
-                      <button disabled={busy} onClick={() => approveClaim(c)}>Approve claim</button>
-                      <button disabled={busy} onClick={() => rejectClaim(c)}>Reject claim</button>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => approveClaim(c)}
+                        aria-label={`Approve claim for ${b?.name ?? `business #${c.business_id}`}`}
+                      >
+                        Approve claim
+                      </button>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => rejectClaim(c)}
+                        aria-label={`Reject claim for ${b?.name ?? `business #${c.business_id}`}`}
+                      >
+                        Reject claim
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -244,7 +292,7 @@ export default function Admin(){
         </ul>
       )}
 
-      {err && <div style={{ color:'#b00020', marginTop:10 }}>{err}</div>}
+      {err && <div style={{ color:'#b00020', marginTop:10 }} aria-live="polite">{err}</div>}
     </div>
   )
 }

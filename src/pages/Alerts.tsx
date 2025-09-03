@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useId } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
 type AlertRow = {
@@ -27,6 +27,11 @@ export default function Alerts() {
   const [body, setBody] = useState('')
   const [exp, setExp] = useState('')
   const [creating, setCreating] = useState(false)
+
+  const idCat = useId()
+  const idTitle = useId()
+  const idBody = useId()
+  const idExpires = useId()
 
   const showErr = (e:any)=> setErr(e?.message ?? String(e))
 
@@ -133,23 +138,33 @@ export default function Alerts() {
 
       {/* create form */}
       <div style={{display:'grid',gap:8,margin:'12px 0'}}>
-        <select value={cat} onChange={e=>setCat(e.target.value as any)}>
+        <label htmlFor={idCat}>Category</label>
+        <select id={idCat} value={cat} onChange={e=>setCat(e.target.value as any)}>
           <option value="general">general</option>
           <option value="transport">transport</option>
           <option value="closure">closure</option>
           <option value="lost_found">lost_found</option>
           <option value="weather">weather</option>
         </select>
-        <input placeholder="Alert title" value={title} onChange={e=>setTitle(e.target.value)} />
-        <textarea placeholder="Alert body" value={body} onChange={e=>setBody(e.target.value)} />
-        <label>Expires at</label>
-        <input type="datetime-local" value={exp} onChange={e=>setExp(e.target.value)} />
-        <button disabled={!me || creating} onClick={createAlert}>{creating ? 'Creating…' : 'Create alert'}</button>
+
+        <label htmlFor={idTitle}>Alert title</label>
+        <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Road closed on High St" />
+
+        <label htmlFor={idBody}>Alert body</label>
+        <textarea id={idBody} value={body} onChange={e=>setBody(e.target.value)} placeholder="Details (optional)" />
+
+        <label htmlFor={idExpires}>Expires at</label>
+        <input id={idExpires} type="datetime-local" value={exp} onChange={e=>setExp(e.target.value)} />
+
+        <button type="button" disabled={!me || creating} onClick={createAlert} aria-busy={creating}>
+          {creating ? 'Creating…' : 'Create alert'}
+        </button>
       </div>
 
       <ul style={{listStyle:'none',padding:0,display:'grid',gap:12}}>
         {alerts.map(a => {
           const p = a.author_id ? profiles[a.author_id] : undefined
+          const alt = p?.username ? `${p.username}'s avatar` : 'Author avatar'
           const mine = me && a.author_id === me
           const canDelete = !!mine || isMod
           return (
@@ -157,7 +172,8 @@ export default function Alerts() {
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <img
                   src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
-                  alt="" style={{width:28,height:28,borderRadius:'50%',objectFit:'cover',background:'#eee'}}
+                  alt={alt}
+                  style={{width:28,height:28,borderRadius:'50%',objectFit:'cover',background:'#eee'}}
                 />
                 <div style={{fontWeight:600}}>
                   [{a.category}] {a.title} {a.priority === 1 && <span style={{fontSize:12,color:'#b45309'}}>• HIGH</span>}
@@ -174,26 +190,26 @@ export default function Alerts() {
 
               <div style={{marginTop:8,display:'flex',gap:8}}>
                 {canDelete && (
-              <button
-              onClick={() => {
-                if (confirm('Delete this alert?')) deleteAlert(a.id)
-      }}
-  >
-            Delete
-            </button>
-      )}
-      {isMod && (
-        <button onClick={() => togglePriority(a)}>
-        {a.priority === 1 ? 'Unmark High Priority' : 'Mark High Priority'}
-        </button>
-      )}
+                  <button
+                    type="button"
+                    onClick={() => { if (confirm('Delete this alert?')) deleteAlert(a.id) }}
+                    aria-label={`Delete alert ${a.title}`}
+                  >
+                    Delete
+                  </button>
+                )}
+                {isMod && (
+                  <button type="button" onClick={() => togglePriority(a)} aria-pressed={a.priority === 1}>
+                    {a.priority === 1 ? 'Unmark High Priority' : 'Mark High Priority'}
+                  </button>
+                )}
               </div>
             </li>
           )
         })}
       </ul>
 
-      {err && <div style={{color:'#b00020'}}>{err}</div>}
+      {err && <div style={{color:'#b00020'}} aria-live="polite">{err}</div>}
     </div>
   )
 }

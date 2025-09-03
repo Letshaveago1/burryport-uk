@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import PostCard from '../components/PostCard'
-import type { Post } from '../types'   // ← add
-// remove the local 'type Post = { ... }' block
-
-
+import type { Post } from '../types'
 
 export default function Feed() {
   const [email, setEmail] = useState('')
@@ -23,6 +20,13 @@ export default function Feed() {
   const [err, setErr] = useState('')
 
   const showErr = (e: any) => setErr(e?.message ?? String(e))
+
+  // ---------- IDs for labels ----------
+  const idEmail = useId()
+  const idPw = useId()
+  const idTitle = useId()
+  const idContent = useId()
+  const idFile = useId()
 
   // ---- auth + data ---------------------------------------------------------
 
@@ -187,55 +191,109 @@ export default function Feed() {
         {userEmail ? (
           <div>
             Signed in as <b>{userEmail}</b>{' '}
-            <button onClick={signOut}>Sign out</button>
+            <button type="button" onClick={signOut}>Sign out</button>
           </div>
         ) : (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <input placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
-            <input placeholder="password" type="password" value={pw} onChange={e => setPw(e.target.value)} />
-            <button onClick={signIn}>Sign in</button>
-            <span style={{ alignSelf: 'center', opacity: 0.6 }}>or</span>
-            <button onClick={signInWithGoogle} style={{ border: '1px solid #ccc' }}>
-              Continue with Google
-            </button>
+          <div style={{ display: 'grid', gap: 8 }}>
+            <label htmlFor={idEmail}>
+              <span style={{ display: 'block' }}>Email</span>
+              <input
+                id={idEmail}
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                autoComplete="email"
+                placeholder="you@example.com"
+              />
+            </label>
+
+            <label htmlFor={idPw}>
+              <span style={{ display: 'block' }}>Password</span>
+              <input
+                id={idPw}
+                type="password"
+                value={pw}
+                onChange={e => setPw(e.target.value)}
+                autoComplete="current-password"
+                placeholder="Your password"
+              />
+            </label>
+
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <button type="button" onClick={signIn}>Sign in</button>
+              <span style={{ opacity: 0.6 }}>or</span>
+              <button type="button" onClick={signInWithGoogle} style={{ border: '1px solid #ccc' }}>
+                Continue with Google
+              </button>
+            </div>
           </div>
         )}
 
-        <input placeholder="Post title" value={title} onChange={e => setTitle(e.target.value)} />
-        <textarea placeholder="Post content" value={content} onChange={e => setContent(e.target.value)} />
+        <label htmlFor={idTitle}>
+          <span style={{ display: 'block' }}>Post title</span>
+          <input
+            id={idTitle}
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            placeholder="What’s happening?"
+          />
+        </label>
+
+        <label htmlFor={idContent}>
+          <span style={{ display: 'block' }}>Post content</span>
+          <textarea
+            id={idContent}
+            value={content}
+            onChange={e => setContent(e.target.value)}
+            placeholder="Add details…"
+          />
+        </label>
 
         {/* Image picker + preview */}
         <div style={{ display: 'grid', gap: 6 }}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={e => onPickFile(e.target.files?.[0] ?? null)}
-          />
+          <label htmlFor={idFile}>
+            <span style={{ display: 'block' }}>Attach an image (optional)</span>
+            <input
+              id={idFile}
+              type="file"
+              accept="image/*"
+              onChange={e => onPickFile(e.target.files?.[0] ?? null)}
+            />
+          </label>
+
           {previewUrl && (
             <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <img src={previewUrl} alt="" style={{ maxHeight: 120, borderRadius: 8 }} />
-              <button onClick={() => onPickFile(null)}>Remove image</button>
+              <img
+                src={previewUrl}
+                alt={title ? `Preview: ${title}` : 'Selected image preview'}
+                style={{ maxHeight: 120, borderRadius: 8 }}
+              />
+              <button type="button" onClick={() => onPickFile(null)}>Remove image</button>
             </div>
           )}
         </div>
 
         <button
+          type="button"
           disabled={!userEmail || !title.trim() || uploading}
           onClick={createPost}
+          aria-busy={uploading}
         >
           {uploading ? 'Uploading…' : 'Create Post'}
         </button>
       </div>
 
-      {/* ↓↓↓ This is the only part you needed to swap ↓↓↓ */}
       <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 12 }}>
         {posts.map(p => (
           <PostCard key={p.id} post={p} />
         ))}
       </ul>
-      {/* ↑↑↑ Replace your old <li>...</li> mapping with this ↑↑↑ */}
 
-      {err && <div style={{ color: '#b00020' }}>{err}</div>}
+      {err && (
+        <div style={{ color: '#b00020' }} aria-live="polite">
+          {err}
+        </div>
+      )}
     </div>
   )
 }
