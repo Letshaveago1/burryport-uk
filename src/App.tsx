@@ -43,7 +43,12 @@ export default function App() {
             <Route path="/businesses" element={<Businesses />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/history" element={<StaticPage slug="history" />} />
-            <Route
+            <Route path="/tourism" element={<StaticPage slug="tourism" />} />
+            <Route path="/wildlife" element={<StaticPage slug="wildlife" />} />
+            <Route path="/earhart" element={<StaticPage slug="earhart" />} />
+            <Route path="/harbour" element={<StaticPage slug="harbour" />} />
+            <Route path="/faq" element={<StaticPage slug="faq" />} />
+          <Route
               path="/admin"
               element={
                 <ProtectedRoute requireModerator>

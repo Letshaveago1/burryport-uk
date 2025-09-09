@@ -3,7 +3,24 @@ import { supabase } from '../lib/supabaseClient'
 import PostCard from '../components/PostCard'
 import type { Post } from '../types'
 
+// 👇 import SEO helpers
+import { useHead } from '../lib/seo'
+import { websiteSchema, organizationSchema, siteBase } from '../lib/schema'
+
 export default function Feed() {
+  // 👇 inject SEO + JSON-LD
+  useHead({
+    title: 'Burry Port – Local Guide & Live Info',
+    description: 'Mobile-first guide to Burry Port: harbour, coastal path, Pembrey Country Park, events and businesses.',
+    canonical: siteBase,
+    metas: [
+      { property: 'og:title', content: 'Burry Port – Local Guide & Live Info' },
+      { property: 'og:description', content: 'Harbour, coastal path, Pembrey Country Park, events and businesses.' },
+      { name: 'theme-color', content: '#0ea5e9' }
+    ],
+    jsonLd: [websiteSchema(), organizationSchema()],
+  })
+
   const [email, setEmail] = useState('')
   const [pw, setPw] = useState('')
   const [userEmail, setUserEmail] = useState<string | null>(null)
