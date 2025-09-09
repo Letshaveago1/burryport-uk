@@ -10,6 +10,8 @@ import Admin from './pages/Admin'
 import Profile from './pages/Profile'
 import AuthProvider, { useAuth } from './components/AuthProvider'
 import type { ReactNode } from 'react'
+import LiveRailBanner from './components/LiveRailBanner'
+import StaticPage from './pages/StaticPage'
 
 function ProtectedRoute({
   children,
@@ -29,7 +31,9 @@ export default function App() {
   return (
     <AuthProvider>
       <>
+        <div style={{ position: 'sticky', top: 0, zIndex: 50 }}></div> 
         <AlertBanner />
+        <LiveRailBanner />
         <div style={{ maxWidth: 900, margin: '32px auto', fontFamily: 'system-ui, sans-serif' }}>
           <NavBar />
           <Routes>
@@ -38,6 +42,7 @@ export default function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/businesses" element={<Businesses />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/history" element={<StaticPage slug="history" />} />
             <Route
               path="/admin"
               element={

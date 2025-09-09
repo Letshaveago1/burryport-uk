@@ -11,7 +11,7 @@ type Biz = {
   address: string | null
   website: string | null
   phone: string | null
-  images: ImageObj[] | null
+  images: ImageObj[] | null // may also be string/array-of-strings in older rows (we normalize below)
   owner_id: string | null
   status: 'pending' | 'approved' | 'rejected'
   created_at?: string
@@ -27,30 +27,61 @@ type Claim = {
 function ensureHttp(u?: string | null) {
   if (!u) return null
   if (/^https?:\/\//i.test(u)) return u
+  if (u.startsWith('//')) return 'https:' + u
   return `https://${u}`
 }
 
-// --- new helpers to guard image URLs ---
-function isSafeHttpUrl(u?: string | null) {
-  if (!u) return false
+// Robustly pick a cover image URL from various possible shapes
+function pickCoverUrl(images: unknown): string | null {
+  if (!images) return null
   try {
-    const x = new URL(u)
-    return x.protocol === 'http:' || x.protocol === 'https:'
-  } catch { return false }
-}
-function looksTruncated(u: string) {
-  // common truncation characters from copy/paste
-  return u.includes('…') || u.includes('...')
+    // string
+    if (typeof images === 'string') return images
+    // array
+    if (Array.isArray(images)) {
+      const first = images[0]
+      if (!first) return null
+      if (typeof first === 'string') return first
+      if (typeof first === 'object' && first && 'url' in first) {
+        return (first as { url?: string }).url ?? null
+      }
+    }
+    // single object
+    if (typeof images === 'object' && images && 'url' in (images as any)) {
+      return (images as { url?: string }).url ?? null
+    }
+  } catch {}
+  return null
 }
 
-export default function Businesses(){
+// Pretty placeholder if an external image fails to load (hotlink blocked, 404, etc)
+const PLACEHOLDER_DATA_URI =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="320">
+      <rect width="100%" height="100%" fill="#f3f4f6"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+            font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af">
+        image unavailable
+      </text>
+    </svg>`
+  )
+
+export default function Businesses() {
   const { ready, session } = useAuth()
   const me = session?.user?.id ?? null
 
   const [rows, setRows] = useState<Biz[]>([])
   const [myClaims, setMyClaims] = useState<Record<number, Claim>>({})
   const [err, setErr] = useState('')
-  const showErr = (e:any)=> setErr(e?.message ?? String(e))
+  const showErr = (e: any) => setErr(e?.message ?? String(e))
+
+  // Decide whether to crop or fit: logos/SVGs should not be cropped
+  function chooseFit(url?: string | null) {
+    if (!url) return 'cover' as const
+    const lower = url.toLowerCase()
+    return lower.endsWith('.svg') || lower.includes('logo') ? 'contain' : 'cover'
+  }
 
   async function load() {
     try {
@@ -68,7 +99,7 @@ export default function Businesses(){
           .from('business_claims')
           .select('id,business_id,claimant_id,status')
           .eq('claimant_id', me)
-          .in('status', ['pending','approved'])
+          .in('status', ['pending', 'approved'])
           .limit(500)
         const map: Record<number, Claim> = {}
         for (const c of (claims || []) as Claim[]) map[c.business_id] = c
@@ -76,10 +107,28 @@ export default function Businesses(){
       } else {
         setMyClaims({})
       }
-    } catch (e) { showErr(e) }
+    } catch (e) {
+      showErr(e)
+    }
   }
 
-  useEffect(() => { if (ready) load() }, [ready]) // eslint-disable-line
+  useEffect(() => {
+    if (ready) load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready])
+
+  // realtime refresh if any business row changes
+  useEffect(() => {
+    if (!ready) return
+    const ch = supabase
+      .channel('rt-public-biz')
+      .on('postgres_changes', { event: '*', schema: 'app', table: 'businesses' }, () => load())
+      .subscribe()
+    return () => {
+      supabase.removeChannel(ch)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready])
 
   async function claim(b: Biz) {
     try {
@@ -92,52 +141,103 @@ export default function Businesses(){
       if (error) throw error
       await load()
       alert('Claim submitted. An admin will review it.')
-    } catch (e) { showErr(e) }
+    } catch (e) {
+      showErr(e)
+    }
   }
 
   return (
     <div>
       <h2>Businesses</h2>
 
-      <ul style={{ listStyle:'none', padding:0, display:'grid', gap:12 }}>
-        {rows.map(b => {
-          const cover0 = Array.isArray(b.images) && b.images[0]?.url
-          const cover  = cover0 && isSafeHttpUrl(cover0) && !looksTruncated(cover0) ? cover0 : null
-          const site   = ensureHttp(b.website)
+      <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 12 }}>
+        {rows.map((b) => {
+          // Normalize the cover image no matter how it was stored
+          const rawCover = pickCoverUrl(b.images as unknown)
+          const cover = ensureHttp(rawCover || null)
+          const site = ensureHttp(b.website)
           const canClaim = !b.owner_id && !!me && !myClaims[b.id]
-          const youOwn   = b.owner_id === me
+          const youOwn = b.owner_id === me
           const yourClaim = myClaims[b.id]
 
           return (
-            <li key={b.id} style={{ border:'1px solid #e5e7eb', borderRadius:10, overflow:'hidden' }}>
-              <div style={{ display:'grid', gridTemplateColumns:'120px 1fr', gap:12 }}>
-                <div style={{ background:'#f3f4f6' }}>
+            <li
+              key={b.id}
+              style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}
+            >
+              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 12 }}>
+                {/* Image column */}
+                <div
+                  style={{
+                    background: '#f3f4f6',
+                    width: '100%',
+                    position: 'relative',
+                    paddingTop: '75%', // 4:3 aspect ratio without relying on CSS aspect-ratio
+                    overflow: 'hidden',
+                  }}
+                >
                   {cover ? (
                     <img
                       src={cover}
-                      alt={b.images![0].alt ?? b.name}
-                      style={{ width:'100%', height:100, objectFit:'cover', display:'block' }}
-                      // if the URL 404s, just hide the image box
-                      onError={(e:any)=>{ e.currentTarget.style.display='none' }}
+                      alt={
+                        (Array.isArray(b.images) &&
+                          (b.images[0] as any)?.alt) ||
+                        b.name
+                      }
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: chooseFit(cover), // 'cover' for photos, 'contain' for logos/SVGs
+                        objectPosition: 'center',
+                        display: 'block',
+                      }}
+                      onError={(e) => {
+                        const el = e.currentTarget as HTMLImageElement
+                        el.onerror = null
+                        el.src = PLACEHOLDER_DATA_URI
+                      }}
                     />
-                  ) : <div style={{ width:'100%', height:100 }} />}
+                  ) : (
+                    <div style={{ position: 'absolute', inset: 0 }} />
+                  )}
                 </div>
-                <div style={{ padding:10 }}>
-                  <div style={{ fontWeight:700 }}>{b.name}</div>
-                  <div style={{ fontSize:12, opacity:0.75 }}>{b.category || '—'}</div>
-                  {b.address && <div style={{ fontSize:12, opacity:0.85, marginTop:4 }}>{b.address}</div>}
-                  <div style={{ display:'flex', gap:8, marginTop:6 }}>
-                    {site && <a href={site} target="_blank" rel="noreferrer noopener">Website</a>}
-                    {b.phone && <a href={`tel:${b.phone.replace(/\s+/g,'')}`}>Call</a>}
+
+                {/* Details column */}
+                <div style={{ padding: 10 }}>
+                  <div style={{ fontWeight: 700 }}>{b.name}</div>
+                  <div style={{ fontSize: 12, opacity: 0.75 }}>{b.category || '—'}</div>
+                  {b.address && (
+                    <div style={{ fontSize: 12, opacity: 0.85, marginTop: 4 }}>{b.address}</div>
+                  )}
+                  <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                    {site && (
+                      <a href={site} target="_blank" rel="noreferrer noopener">
+                        Website
+                      </a>
+                    )}
+                    {b.phone && <a href={`tel:${b.phone.replace(/\s+/g, '')}`}>Call</a>}
                   </div>
 
-                  <div style={{ marginTop:8 }}>
-                    {youOwn && <span style={{ fontSize:12, color:'#059669' }}>You own this business</span>}
+                  <div style={{ marginTop: 8 }}>
+                    {youOwn && (
+                      <span style={{ fontSize: 12, color: '#059669' }}>
+                        You own this business
+                      </span>
+                    )}
                     {!youOwn && yourClaim && yourClaim.status === 'pending' && (
-                      <span style={{ fontSize:12, color:'#b45309' }}>Your claim is pending review</span>
+                      <span style={{ fontSize: 12, color: '#b45309' }}>
+                        Your claim is pending review
+                      </span>
                     )}
                     {!youOwn && canClaim && (
-                      <button onClick={() => claim(b)} aria-label={`Claim ${b.name}`}>Claim this business</button>
+                      <button onClick={() => claim(b)} aria-label={`Claim ${b.name}`}>
+                        Claim this business
+                      </button>
                     )}
                   </div>
                 </div>
@@ -148,7 +248,7 @@ export default function Businesses(){
       </ul>
 
       {rows.length === 0 && <div>No approved businesses yet.</div>}
-      {err && <div style={{ color:'#b00020', marginTop:10 }}>{err}</div>}
+      {err && <div style={{ color: '#b00020', marginTop: 10 }}>{err}</div>}
     </div>
   )
 }

@@ -1,0 +1,6 @@
+{
+  "deploy": { "entrypoint": "index.ts" },
+  "compilerOptions": {
+    "lib": ["deno.ns", "dom"]
+  }
+}
