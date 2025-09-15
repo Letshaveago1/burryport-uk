@@ -1,7 +1,10 @@
-// src/pages/Businesses.tsx
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../components/AuthProvider'
+
+// 👇 NEW: SEO helpers
+import { useHead } from '../lib/seo'
+import { siteBase } from '../lib/schema'
 
 type ImageObj = { url: string; alt?: string }
 type Biz = {
@@ -35,9 +38,7 @@ function ensureHttp(u?: string | null) {
 function pickCoverUrl(images: unknown): string | null {
   if (!images) return null
   try {
-    // string
     if (typeof images === 'string') return images
-    // array
     if (Array.isArray(images)) {
       const first = images[0]
       if (!first) return null
@@ -46,7 +47,6 @@ function pickCoverUrl(images: unknown): string | null {
         return (first as { url?: string }).url ?? null
       }
     }
-    // single object
     if (typeof images === 'object' && images && 'url' in (images as any)) {
       return (images as { url?: string }).url ?? null
     }
@@ -146,13 +146,87 @@ export default function Businesses() {
     }
   }
 
+  // ----------------- AIO / SEO layer -----------------
+  const canonical = `${siteBase}/businesses`
+  const pageTitle = 'Burry Port Businesses – Local Directory'
+  const pageDesc = rows.length
+    ? `Local businesses in Burry Port: ${rows.slice(0, 4).map(b => b.name).join(' • ')}${rows.length > 4 ? '…' : ''}`
+    : 'Discover local businesses in Burry Port: cafés, shops, services and more.'
+
+  // Build JSON-LD: ItemList + per-business LocalBusiness
+  const jsonBlocks = useMemo(() => {
+    // ItemList so crawlers know what’s on the page
+    const itemList = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Burry Port Businesses',
+      url: canonical,
+      itemListElement: rows.map((b, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${canonical}#biz-${b.id}`
+      }))
+    }
+
+    // LocalBusiness for each row (minimal but valid)
+    const perBiz = rows.map((b) => {
+      const url = `${canonical}#biz-${b.id}`
+      const website = ensureHttp(b.website) || undefined
+      const image = ensureHttp(pickCoverUrl(b.images as unknown) || null) || undefined
+
+      // You can specialize @type later (Restaurant, Store, etc.). For now keep it generic.
+      const block: any = {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: b.name,
+        url,
+        description: b.category || undefined,
+        telephone: b.phone || undefined,
+        image,
+      }
+
+      if (website) {
+        block.sameAs = [website]
+      }
+      if (b.address) {
+        block.address = {
+          '@type': 'PostalAddress',
+          streetAddress: b.address,
+          addressLocality: 'Burry Port',
+          addressRegion: 'Carmarthenshire',
+          addressCountry: 'GB'
+        }
+      }
+      return block
+    })
+
+    return [itemList, ...perBiz]
+  }, [JSON.stringify(rows)])
+
+  const ogImage = `${siteBase}/og/default.jpg`
+
+  useHead({
+    title: pageTitle,
+    description: pageDesc,
+    canonical,
+    metas: [
+      { property: 'og:title', content: pageTitle },
+      { property: 'og:description', content: pageDesc },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:image', content: ogImage },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: ogImage }
+    ],
+    jsonLd: jsonBlocks
+  })
+  // ----------------- end AIO / SEO layer -------------
+
   return (
     <div>
       <h2>Businesses</h2>
 
       <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 12 }}>
         {rows.map((b) => {
-          // Normalize the cover image no matter how it was stored
           const rawCover = pickCoverUrl(b.images as unknown)
           const cover = ensureHttp(rawCover || null)
           const site = ensureHttp(b.website)
@@ -162,6 +236,7 @@ export default function Businesses() {
 
           return (
             <li
+              id={`biz-${b.id}`}
               key={b.id}
               style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}
             >
@@ -172,7 +247,7 @@ export default function Businesses() {
                     background: '#f3f4f6',
                     width: '100%',
                     position: 'relative',
-                    paddingTop: '75%', // 4:3 aspect ratio without relying on CSS aspect-ratio
+                    paddingTop: '75%', // 4:3 aspect ratio
                     overflow: 'hidden',
                   }}
                 >
@@ -192,7 +267,7 @@ export default function Businesses() {
                         bottom: 0,
                         width: '100%',
                         height: '100%',
-                        objectFit: chooseFit(cover), // 'cover' for photos, 'contain' for logos/SVGs
+                        objectFit: chooseFit(cover),
                         objectPosition: 'center',
                         display: 'block',
                       }}

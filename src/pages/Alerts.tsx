@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, useId } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { useHead } from '../lib/seo'
+import { siteBase } from '../lib/schema'
 
 type AlertRow = {
   id:number
@@ -132,6 +134,70 @@ export default function Alerts() {
     } catch (e){ showErr(e) }
   }
 
+  // ----------------- AIO / SEO layer -----------------
+  const canonical = `${siteBase}/alerts`
+  const pageTitle = 'Burry Port Alerts – Closures, Weather, Transport'
+  const top = alerts.slice(0, 3).map(a => a.title).join(' • ')
+  const pageDesc = top
+    ? `Latest local alerts: ${top}`
+    : 'Live local alerts for Burry Port: closures, weather, transport and community notices.'
+
+  // Build SpecialAnnouncement (or fallback) + ItemList
+  const jsonBlocks = useMemo(() => {
+    const list = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Burry Port Alerts',
+      url: canonical,
+      itemListElement: alerts.map((a, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${canonical}#alert-${a.id}`
+      }))
+    }
+
+    const perAlert = alerts.map(a => {
+      const url = `${canonical}#alert-${a.id}`
+      const block: any = {
+        '@context': 'https://schema.org',
+        '@type': 'SpecialAnnouncement',
+        name: a.title,
+        text: a.body || a.title,
+        datePosted: new Date(a.created_at).toISOString(),
+        url,
+        category: a.category,
+      }
+      if (a.expires_at) block.expires = new Date(a.expires_at).toISOString()
+      // You can hint audience/location if you like:
+      block.spatialCoverage = {
+        '@type': 'Place',
+        name: 'Burry Port',
+        address: { '@type': 'PostalAddress', addressLocality: 'Burry Port', addressRegion: 'Carmarthenshire', addressCountry: 'GB' }
+      }
+      return block
+    })
+
+    return [list, ...perAlert]
+  }, [JSON.stringify(alerts)])
+
+  const ogImage = `${siteBase}/og/default.jpg`
+
+  useHead({
+    title: pageTitle,
+    description: pageDesc,
+    canonical,
+    metas: [
+      { property: 'og:title', content: pageTitle },
+      { property: 'og:description', content: pageDesc },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:image', content: ogImage },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: ogImage }
+    ],
+    jsonLd: jsonBlocks
+  })
+  // ----------------- end AIO / SEO layer -------------
+
   return (
     <div>
       <h2>Alerts</h2>
@@ -168,7 +234,7 @@ export default function Alerts() {
           const mine = me && a.author_id === me
           const canDelete = !!mine || isMod
           return (
-            <li key={a.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8}}>
+            <li id={`alert-${a.id}`} key={a.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <img
                   src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}

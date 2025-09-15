@@ -45,4 +45,19 @@
   <changefreq>weekly</changefreq>
   <priority>0.7</priority>
 </url>
+<url>
+  <loc>https://burryport.uk/transport</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
+<url>
+  <loc>https://burryport.uk/schools</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
+<url>
+  <loc>https://burryport.uk/pembrey-country-park</loc>
+  <changefreq>weekly</changefreq>
+  <priority>0.7</priority>
+</url>
 </urlset>

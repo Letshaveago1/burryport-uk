@@ -2,7 +2,7 @@ import { writeFileSync } from 'node:fs'
 
 const base = 'https://burryport.uk'
 // Keep this list in sync with slugs you publish
-const routes = ['/', '/history', '/tourism', '/wildlife', '/earhart', '/harbour', '/events', '/businesses', '/faq']
+const routes = ['/', '/history', '/tourism', '/wildlife', '/earhart', '/harbour', '/events', '/businesses', '/faq', '/transport', '/schools', '/pembrey-country-park']
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

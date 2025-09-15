@@ -6,3 +6,10 @@ export type Post = {
   created_at: string
   images?: { url: string; alt?: string }[] | null
 }
+
+export type Profile = {
+  user_id: string
+  username: string | null
+  avatar_url: string | null
+  is_moderator?: boolean | null
+}

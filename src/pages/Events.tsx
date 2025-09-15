@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, useId } from 'react'
 import { supabase } from '../lib/supabaseClient'
+import { useHead } from '../lib/seo'
+import { siteBase } from '../lib/schema'
 
 type EventRow = {
   id: number
@@ -124,6 +126,81 @@ export default function Events() {
     } catch (e) { showErr(e) }
   }
 
+  // ----------------- AIO / SEO layer -----------------
+  const canonical = `${siteBase}/events`
+  const pageTitle = 'Events in Burry Port – What’s On'
+  const pageDesc = events.length
+    ? `Upcoming events in Burry Port, next up: ${events.slice(0,2).map(e=>e.title).join(' • ')}`
+    : 'Upcoming events in Burry Port: community, sports, beach and harbour activities.'
+
+  // Build Event JSON-LD for each event + an ItemList wrapper
+  const eventsJsonLd = useMemo(() => {
+    const listItems = events.map((ev, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      url: `${canonical}#event-${ev.id}`
+    }))
+
+    const eventBlocks = events.map((ev) => {
+      const startISO = new Date(ev.starts_at).toISOString()
+      const endISO = ev.ends_at ? new Date(ev.ends_at).toISOString() : undefined
+      const url = `${canonical}#event-${ev.id}`
+
+      // Minimal, valid Event schema
+      const block: any = {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: ev.title,
+        description: ev.description || undefined,
+        startDate: startISO,
+        endDate: endISO,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        url,
+      }
+      if (ev.venue) {
+        block.location = {
+          '@type': 'Place',
+          name: ev.venue,
+          address: { '@type': 'PostalAddress', addressLocality: 'Burry Port', addressRegion: 'Carmarthenshire', addressCountry: 'GB' }
+        }
+      }
+      if (ev.link) {
+        block.offers = { '@type': 'Offer', url: ev.link, availability: 'https://schema.org/InStock' }
+      }
+      return block
+    })
+
+    const itemList = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      itemListElement: listItems,
+      url: canonical,
+      name: 'Events in Burry Port'
+    }
+
+    return [itemList, ...eventBlocks]
+  }, [JSON.stringify(events)])
+
+  // Default OG image (you set this up already)
+  const ogImage = `${siteBase}/og/default.jpg`
+
+  useHead({
+    title: pageTitle,
+    description: pageDesc,
+    canonical,
+    metas: [
+      { property: 'og:title', content: pageTitle },
+      { property: 'og:description', content: pageDesc },
+      { property: 'og:type', content: 'website' },
+      { property: 'og:image', content: ogImage },
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: ogImage },
+    ],
+    jsonLd: eventsJsonLd,
+  })
+  // ----------------- end AIO / SEO layer -------------
+
   return (
     <div>
       <h2>Events</h2>
@@ -159,7 +236,7 @@ export default function Events() {
           const p = ev.organizer_id ? profiles[ev.organizer_id] : undefined
           const alt = p?.username ? `${p.username}'s avatar` : 'Organizer avatar'
           return (
-            <li key={ev.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8}}>
+            <li id={`event-${ev.id}`} key={ev.id} style={{padding:12,border:'1px solid #e5e7eb',borderRadius:8}}>
               <div style={{display:'flex',alignItems:'center',gap:8}}>
                 <img
                   src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}

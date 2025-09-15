@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, ChangeEvent } from 'react'
 import { supabase } from '../lib/supabaseClient'
 
+
+
 type ImageObj = { url: string; alt?: string }
 type Biz = {
   id: number
@@ -521,6 +523,7 @@ export default function Admin(){
               <option value="approved">Approved</option>
               <option value="pending">Pending</option>
               <option value="rejected">Rejected</option>
+            
             </select>
           </div>
           <ul style={{ listStyle:'none', padding:0, display:'grid', gap:12 }}>

@@ -12,6 +12,9 @@ import AuthProvider, { useAuth } from './components/AuthProvider'
 import type { ReactNode } from 'react'
 import LiveRailBanner from './components/LiveRailBanner'
 import StaticPage from './pages/StaticPage'
+import AdminPages from './pages/AdminPages' // Import PagesAdmin component
+import RecyclingHub from './pages/RecyclingHub'
+
 
 function ProtectedRoute({
   children,
@@ -48,6 +51,11 @@ export default function App() {
             <Route path="/earhart" element={<StaticPage slug="earhart" />} />
             <Route path="/harbour" element={<StaticPage slug="harbour" />} />
             <Route path="/faq" element={<StaticPage slug="faq" />} />
+            <Route path="/transport" element={<StaticPage slug="transport" />} />
+            <Route path="/schools" element={<StaticPage slug="schools" />} />
+            <Route path="/pembrey-country-park" element={<StaticPage slug="pembrey-country-park" />} />
+            <Route path="/recyclingHub" element={<RecyclingHub />} />
+
           <Route
               path="/admin"
               element={
@@ -56,6 +64,15 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/AdminPages"
+              element={
+                <ProtectedRoute requireModerator>
+                  <AdminPages />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>
