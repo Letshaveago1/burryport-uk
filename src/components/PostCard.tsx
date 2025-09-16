@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import type { Post } from '../types'   // ← add
-// remove the local 'type Post = { ... }' block
-
-
+import type { Post, Profile } from '../types'
 
 type CommentRow = {
   id: number
@@ -12,8 +9,6 @@ type CommentRow = {
   content: string
   created_at: string
 }
-
-type Profile = { username: string | null; avatar_url: string | null }
 
 export default function PostCard({ post }: { post: Post }) {
   const [likesCount, setLikesCount] = useState<number>(0)
@@ -137,62 +132,51 @@ export default function PostCard({ post }: { post: Post }) {
   }
 
   return (
-    <li style={{ padding: 12, border: '1px solid #e5e7eb', borderRadius: 8 }}>
+    <div className="p-4 bg-white border border-gray-200 rounded-lg">
       {/* header: avatar + author + date */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <div className="flex items-center gap-3">
         <img
           src={author?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
           alt=""
-          style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', background: '#eee' }}
+          className="w-10 h-10 rounded-full object-cover bg-gray-200 flex-shrink-0"
         />
-        <div style={{ fontWeight: 600 }}>
-          {post.title}
-          <div style={{ fontWeight: 400, fontSize: 12, opacity: 0.7 }}>
+        <div>
+          <div className="font-semibold text-charcoal">{post.title}</div>
+          <div className="text-xs text-gray-500">
             {author?.username ? `@${author.username}` : '—'} · {new Date(post.created_at).toLocaleString()}
           </div>
         </div>
       </div>
 
       {post.images && Array.isArray(post.images) && post.images[0]?.url && (
-        <img
-          src={post.images[0].url}
-          alt={post.images[0].alt ?? ''}
-          style={{ maxWidth: '100%', borderRadius: 8, marginTop: 8 }}
-        />
+        <img src={post.images[0].url} alt={post.images[0].alt ?? ''} className="mt-3 max-w-full rounded-lg" />
       )}
 
-      {post.content && (
-        <div style={{ whiteSpace: 'pre-wrap', marginTop: 6 }}>{post.content}</div>
-      )}
+      {post.content && <div className="mt-2 whitespace-pre-wrap">{post.content}</div>}
 
       {/* actions */}
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 8 }}>
-        <button onClick={toggleLike}>
+      <div className="flex gap-4 items-center mt-3">
+        <button onClick={toggleLike} className="text-sm text-charcoal hover:text-teal-700">
           {liked ? '♥ Unlike' : '♡ Like'} ({likesCount})
         </button>
-        <button onClick={openComments}>
-          {commentsOpen ? 'Hide comments' : `Show comments (${comments.length})`}
+        <button onClick={openComments} className="text-sm text-charcoal hover:text-teal-700">
+          {commentsOpen ? 'Hide comments' : `Show ${comments.length > 0 ? comments.length + ' ' : ''}comments`}
         </button>
       </div>
 
       {/* comments */}
       {commentsOpen && (
-        <div style={{ marginTop: 8, display: 'grid', gap: 8 }}>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <input
-              placeholder="Write a comment…"
-              value={newComment}
-              onChange={e => setNewComment(e.target.value)}
-              style={{ flex: 1 }}
-            />
-            <button onClick={addComment} disabled={!newComment.trim()}>Post</button>
+        <div className="mt-3 grid gap-3">
+          <div className="flex gap-2">
+            <input placeholder="Write a comment…" value={newComment} onChange={e => setNewComment(e.target.value)} className="flex-1 px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
+            <button onClick={addComment} disabled={!newComment.trim()} className="px-4 py-2 text-sm bg-sand text-charcoal rounded-md hover:bg-opacity-80 disabled:opacity-50">Post</button>
           </div>
 
-          <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 8 }}>
+          <ul className="list-none p-0 grid gap-3">
             {comments.map(c => (
-              <li key={c.id} style={{ padding: 8, border: '1px solid #eee', borderRadius: 6 }}>
-                <div style={{ whiteSpace: 'pre-wrap' }}>{c.content}</div>
-                <div style={{ fontSize: 12, opacity: 0.6 }}>
+              <li key={c.id} className="p-3 bg-gray-50 border border-gray-200 rounded-md">
+                <div className="text-sm">{c.content}</div>
+                <div className="text-xs text-gray-500 mt-1">
                   {new Date(c.created_at).toLocaleString()}
                 </div>
               </li>
@@ -201,7 +185,7 @@ export default function PostCard({ post }: { post: Post }) {
         </div>
       )}
 
-      {err && <div style={{ color: '#b00020', marginTop: 6 }}>{err}</div>}
-    </li>
+      {err && <div className="text-coral mt-2 text-sm">{err}</div>}
+    </div>
   )
 }

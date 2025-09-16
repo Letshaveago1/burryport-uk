@@ -360,34 +360,34 @@ export default function Admin(){
     const cover = Array.isArray(b.images) && b.images[0]?.url
     const site = ensureHttp(b.website)
     return (
-      <li key={b.id} style={{ border:'1px solid #e5e7eb', borderRadius:10, overflow:'hidden' }}>
-        <div style={{ display:'grid', gridTemplateColumns:'160px 1fr', gap:12 }}>
-          <div style={{ background:'#f3f4f6' }}>
+      <li key={b.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+        <div className="grid grid-cols-[160px_1fr] gap-4">
+          <div className="bg-sand">
             {cover ? (
               <img
                 src={cover}
                 alt={b.images![0].alt ?? `${b.name} cover`}
-                style={{ width:'100%', height:120, objectFit:'cover', display:'block' }}
+                className="w-full h-32 object-cover block"
                 onError={(e)=>{ (e.currentTarget as HTMLImageElement).style.display='none' }}
               />
-            ) : <div style={{ width:'100%', height:120 }} />}
+            ) : <div className="w-full h-32" />}
           </div>
-          <div style={{ padding:10 }}>
-            <div style={{ fontWeight:700 }}>{b.name}</div>
-            <div style={{ fontSize:12, opacity:0.75 }}>{b.category || '—'} · <i>{b.status}</i></div>
-            {b.address && <div style={{ fontSize:12, opacity:0.85 }}>{b.address}</div>}
-            <div style={{ display:'flex', gap:8, marginTop:6 }}>
-              {site && <a href={site} target="_blank" rel="noreferrer">Website</a>}
-              {b.phone && <a href={`tel:${b.phone.replace(/\s+/g,'')}`}>Call</a>}
+          <div className="p-3">
+            <div className="font-bold text-charcoal">{b.name}</div>
+            <div className="text-sm text-gray-600">{b.category || '—'} · <i className="capitalize">{b.status}</i></div>
+            {b.address && <div className="text-xs text-gray-500 mt-1">{b.address}</div>}
+            <div className="flex gap-4 mt-2">
+              {site && <a href={site} target="_blank" rel="noreferrer" className="text-sm text-teal-700 hover:underline">Website</a>}
+              {b.phone && <a href={`tel:${b.phone.replace(/\s+/g,'')}`} className="text-sm text-teal-700 hover:underline">Call</a>}
             </div>
-            <div style={{ display:'flex', gap:8, marginTop:8 }}>
+            <div className="flex gap-2 mt-3">
               {showModeration && (
                 <>
-                  <button type="button" disabled={busy} onClick={() => setBusinessStatus(b.id, 'approved')} aria-label={`Approve ${b.name}`}>Approve</button>
-                  <button type="button" disabled={busy} onClick={() => setBusinessStatus(b.id, 'rejected')} aria-label={`Reject ${b.name}`}>Reject</button>
+                  <button type="button" disabled={busy} onClick={() => setBusinessStatus(b.id, 'approved')} aria-label={`Approve ${b.name}`} className="px-3 py-1 text-xs bg-teal-600 text-white rounded-md hover:bg-teal-700 disabled:bg-gray-400">Approve</button>
+                  <button type="button" disabled={busy} onClick={() => setBusinessStatus(b.id, 'rejected')} aria-label={`Reject ${b.name}`} className="px-3 py-1 text-xs bg-gray-200 text-charcoal rounded-md hover:bg-gray-300 disabled:bg-gray-400">Reject</button>
                 </>
               )}
-              <button type="button" onClick={() => openEdit(b.id)} aria-label={`Edit ${b.name}`}>Edit</button>
+              <button type="button" onClick={() => openEdit(b.id)} aria-label={`Edit ${b.name}`} className="px-3 py-1 text-xs bg-sand text-charcoal rounded-md hover:bg-opacity-80">Edit</button>
             </div>
           </div>
         </div>
@@ -407,102 +407,102 @@ export default function Admin(){
   }, [all, allQ, allStatus])
 
   return (
-    <div style={{ maxWidth: 1000, margin: '24px auto' }}>
-      <h2>Admin</h2>
+    <div className="max-w-5xl mx-auto my-6 p-4">
+      <h2 className="text-3xl font-bold text-charcoal mb-4">Admin</h2>
 
-      <div role="tablist" aria-label="Admin sections" style={{ display:'flex', gap:8, margin:'12px 0' }}>
-        <button role="tab" aria-selected={tab==='biz'}    onClick={() => setTab('biz')}    disabled={tab==='biz'}>Review</button>
-        <button role="tab" aria-selected={tab==='claims'} onClick={() => setTab('claims')} disabled={tab==='claims'}>Claims</button>
-        <button role="tab" aria-selected={tab==='add'}    onClick={() => setTab('add')}    disabled={tab==='add'}>Add new</button>
-        <button role="tab" aria-selected={tab==='all'}    onClick={() => setTab('all')}    disabled={tab==='all'}>All</button>
-        <button onClick={() => { loadPendingBiz().catch(showErr); loadClaims().catch(showErr); loadAll().catch(showErr) }} style={{ marginLeft:'auto' }}>
+      <div role="tablist" aria-label="Admin sections" className="flex items-center gap-2 mb-4 border-b border-gray-200">
+        <button role="tab" aria-selected={tab==='biz'} onClick={() => setTab('biz')} className={`px-4 py-2 text-sm font-medium rounded-t-md ${tab === 'biz' ? 'bg-sand text-charcoal border-gray-200 border-t border-x' : 'text-gray-600 hover:bg-gray-100'}`}>Review</button>
+        <button role="tab" aria-selected={tab==='claims'} onClick={() => setTab('claims')} className={`px-4 py-2 text-sm font-medium rounded-t-md ${tab === 'claims' ? 'bg-sand text-charcoal border-gray-200 border-t border-x' : 'text-gray-600 hover:bg-gray-100'}`}>Claims</button>
+        <button role="tab" aria-selected={tab==='add'} onClick={() => setTab('add')} className={`px-4 py-2 text-sm font-medium rounded-t-md ${tab === 'add' ? 'bg-sand text-charcoal border-gray-200 border-t border-x' : 'text-gray-600 hover:bg-gray-100'}`}>Add new</button>
+        <button role="tab" aria-selected={tab==='all'} onClick={() => setTab('all')} className={`px-4 py-2 text-sm font-medium rounded-t-md ${tab === 'all' ? 'bg-sand text-charcoal border-gray-200 border-t border-x' : 'text-gray-600 hover:bg-gray-100'}`}>All</button>
+        <button onClick={() => { loadPendingBiz().catch(showErr); loadClaims().catch(showErr); loadAll().catch(showErr) }} className="ml-auto text-sm text-teal-700 hover:underline">
           Refresh
         </button>
       </div>
 
       {/* Review tab (pending/rejected) */}
       {tab === 'biz' && (
-        <ul style={{ listStyle:'none', padding:0, display:'grid', gap:12 }}>
+        <ul className="list-none p-0 grid gap-4">
           {pendingBiz.map(b => <Card key={b.id} b={b} showModeration />)}
-          {pendingBiz.length === 0 && <div>No businesses need review. 🎉</div>}
+          {pendingBiz.length === 0 && <div className="text-gray-500">No businesses need review. 🎉</div>}
         </ul>
       )}
 
       {/* Claims tab */}
       {tab === 'claims' && (
-        <ul style={{ listStyle:'none', padding:0, display:'grid', gap:12 }}>
+        <ul className="list-none p-0 grid gap-4">
           {claims.map(c => {
             const b = bizMap[c.business_id]
             const p = profiles[c.claimant_id]
             return (
-              <li key={c.id} style={{ border:'1px solid #e5e7eb', borderRadius:10, padding:10 }}>
-                <div style={{ display:'flex', gap:10 }}>
+              <li key={c.id} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex gap-4">
                   <img
                     src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
                     alt={p?.username ? `${p.username}'s avatar` : 'Claimant avatar'}
-                    style={{ width:36, height:36, borderRadius:'50%', objectFit:'cover', background:'#eee' }}
+                    className="w-9 h-9 rounded-full object-cover bg-gray-200"
                   />
-                  <div style={{ flex:1 }}>
-                    <div style={{ fontWeight:700 }}>{b ? b.name : `Business #${c.business_id}`}</div>
-                    <div style={{ fontSize:12, opacity:0.7 }}>
+                  <div className="flex-1">
+                    <div className="font-bold text-charcoal">{b ? b.name : `Business #${c.business_id}`}</div>
+                    <div className="text-xs text-gray-500">
                       claimant: {p?.username ? `@${p.username}` : c.claimant_id.slice(0,8)} · {new Date(c.created_at).toLocaleString()}
                     </div>
-                    {c.message && <div style={{ marginTop: 6, whiteSpace: 'pre-wrap' }}>{c.message}</div>}
-                    <div style={{ display:'flex', gap:8, marginTop:8 }}>
-                      <button type="button" disabled={busy} onClick={() => approveClaim(c)}>Approve claim</button>
-                      <button type="button" disabled={busy} onClick={() => rejectClaim(c)}>Reject claim</button>
+                    {c.message && <div className="mt-2 whitespace-pre-wrap text-sm">{c.message}</div>}
+                    <div className="flex gap-4 mt-3">
+                      <button type="button" disabled={busy} onClick={() => approveClaim(c)} className="px-3 py-1 text-sm bg-teal-600 text-white rounded-md hover:bg-teal-700 disabled:bg-gray-400">Approve claim</button>
+                      <button type="button" disabled={busy} onClick={() => rejectClaim(c)} className="px-3 py-1 text-sm bg-gray-200 text-charcoal rounded-md hover:bg-gray-300 disabled:bg-gray-400">Reject claim</button>
                     </div>
                   </div>
                 </div>
               </li>
             )
           })}
-          {claims.length === 0 && <div>No pending claims. 🌿</div>}
+          {claims.length === 0 && <div className="text-gray-500">No pending claims. 🌿</div>}
         </ul>
       )}
 
       {/* Add tab */}
       {tab === 'add' && (
-        <div style={{ border:'1px solid #e5e7eb', borderRadius:10, padding:12 }}>
-          <div style={{ display:'grid', gap:10, maxWidth:560 }}>
-            <label>Name<input name="name" value={createForm.name} onChange={onCreateChange} placeholder="Business name" /></label>
-            <label>Category<input name="category" value={createForm.category} onChange={onCreateChange} placeholder="e.g. Cafe, Barber" /></label>
-            <label>Address<input name="address" value={createForm.address} onChange={onCreateChange} placeholder="Street, Town, Postcode" /></label>
-            <label>Website<input name="website" type="url" value={createForm.website} onChange={onCreateChange} placeholder="https://…" /></label>
-            <label>Phone<input name="phone" value={createForm.phone} onChange={onCreateChange} placeholder="+44 …" /></label>
-            <label>Email<input name="email" type="email" value={createForm.email} onChange={onCreateChange} placeholder="name@example.com" /></label>
-            <label>Facebook<input name="facebook_page" value={createForm.facebook_page} onChange={onCreateChange} placeholder="https://facebook.com/…" /></label>
-            <label>Opening hours<textarea name="opening_hours" rows={2} value={createForm.opening_hours} onChange={onCreateChange} placeholder="Mon–Fri 9–5; Sat 10–4" /></label>
-            <label>Tags (comma-separated)<input name="tags" value={createForm.tags} onChange={onCreateChange} placeholder="coffee, vegan" /></label>
-            <label>Status
-              <select name="status" value={createForm.status} onChange={onCreateChange}>
+        <div className="border border-gray-200 rounded-lg p-4">
+          <div className="grid gap-4 max-w-xl">
+            <label className="block text-sm font-medium text-gray-700">Name<input name="name" value={createForm.name} onChange={onCreateChange} placeholder="Business name" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Category<input name="category" value={createForm.category} onChange={onCreateChange} placeholder="e.g. Cafe, Barber" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Address<input name="address" value={createForm.address} onChange={onCreateChange} placeholder="Street, Town, Postcode" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Website<input name="website" type="url" value={createForm.website} onChange={onCreateChange} placeholder="https://…" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Phone<input name="phone" value={createForm.phone} onChange={onCreateChange} placeholder="+44 …" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Email<input name="email" type="email" value={createForm.email} onChange={onCreateChange} placeholder="name@example.com" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Facebook<input name="facebook_page" value={createForm.facebook_page} onChange={onCreateChange} placeholder="https://facebook.com/…" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Opening hours<textarea name="opening_hours" rows={2} value={createForm.opening_hours} onChange={onCreateChange} placeholder="Mon–Fri 9–5; Sat 10–4" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Tags (comma-separated)<input name="tags" value={createForm.tags} onChange={onCreateChange} placeholder="coffee, vegan" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" /></label>
+            <label className="block text-sm font-medium text-gray-700">Status
+              <select name="status" value={createForm.status} onChange={onCreateChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
                 <option value="pending">pending</option>
                 <option value="approved">approved</option>
                 <option value="rejected">rejected</option>
               </select>
             </label>
 
-            <fieldset style={{ border:'1px dashed #ddd', padding:10 }}>
-              <legend>Cover image (optional)</legend>
-              <div style={{ display:'grid', gap:8 }}>
-                <input type="file" accept="image/*" onChange={e => setCreateImageFile(e.target.files?.[0] ?? null)} />
-                <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-                  <input placeholder="Or paste image URL" value={createImageUrl} onChange={e=>setCreateImageUrl(e.target.value)} />
-                  <button type="button" onClick={addCreateImageUrl}>Use URL</button>
+            <fieldset className="border border-dashed border-gray-300 p-4 rounded-md">
+              <legend className="text-sm font-medium text-gray-700 px-1">Cover image (optional)</legend>
+              <div className="grid gap-4">
+                <input type="file" accept="image/*" onChange={e => setCreateImageFile(e.target.files?.[0] ?? null)} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand file:text-charcoal hover:file:bg-opacity-80" />
+                <div className="flex gap-2 items-center">
+                  <input placeholder="Or paste image URL" value={createImageUrl} onChange={e=>setCreateImageUrl(e.target.value)} className="flex-1 block w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
+                  <button type="button" onClick={addCreateImageUrl} className="px-3 py-2 text-sm bg-gray-200 text-charcoal rounded-md hover:bg-gray-300">Use URL</button>
                 </div>
                 {(createImageFile || createImageUrl) && (
-                  <div style={{ fontSize:12, opacity:0.7 }}>
+                  <div className="text-xs text-gray-500">
                     {createImageFile ? createImageFile.name : createImageUrl}
                   </div>
                 )}
               </div>
             </fieldset>
 
-            <div style={{ display:'flex', gap:8, marginTop:6 }}>
-              <button type="button" onClick={createBusiness} disabled={createSaving} aria-busy={createSaving}>
+            <div className="flex gap-4 mt-2">
+              <button type="button" onClick={createBusiness} disabled={createSaving} aria-busy={createSaving} className="px-4 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400">
                 {createSaving ? 'Adding…' : 'Add business'}
               </button>
-              <button type="button" onClick={() => {
+              <button type="button" className="px-4 py-2 bg-gray-200 text-charcoal rounded-md hover:bg-gray-300" onClick={() => {
                 setCreateForm({ name:'', category:'', address:'', website:'', phone:'', email:'', description:'', facebook_page:'', opening_hours:'', tags:'', status:'pending' })
                 setCreateImageFile(null); setCreateImageUrl('')
               }}>
@@ -516,9 +516,9 @@ export default function Admin(){
       {/* All tab */}
       {tab === 'all' && (
         <>
-          <div style={{ display:'flex', gap:8, margin:'8px 0' }}>
-            <input placeholder="Search name, category, address…" value={allQ} onChange={e=>setAllQ(e.target.value)} />
-            <select value={allStatus} onChange={e=>setAllStatus(e.target.value as any)}>
+          <div className="flex gap-4 mb-4">
+            <input placeholder="Search name, category, address…" value={allQ} onChange={e=>setAllQ(e.target.value)} className="flex-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+            <select value={allStatus} onChange={e=>setAllStatus(e.target.value as any)} className="block w-full max-w-xs px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
               <option value="all">All statuses</option>
               <option value="approved">Approved</option>
               <option value="pending">Pending</option>
@@ -526,76 +526,76 @@ export default function Admin(){
             
             </select>
           </div>
-          <ul style={{ listStyle:'none', padding:0, display:'grid', gap:12 }}>
+          <ul className="list-none p-0 grid gap-4">
             {allFiltered.map(b => <Card key={b.id} b={b} />)}
-            {allFiltered.length === 0 && <div>No matches.</div>}
+            {allFiltered.length === 0 && <div className="text-gray-500">No matches.</div>}
           </ul>
         </>
       )}
 
       {/* Editor panel */}
       {editingId !== null && (
-        <div style={{ marginTop:16, border:'1px solid #e5e7eb', borderRadius:10, padding:12 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
-            <strong>Editing business #{editingId}</strong>
-            <button style={{ marginLeft:'auto' }} onClick={() => { setEditingId(null); setEditData(null); setEditImages([]); setEditImageFile(null); setEditImageUrl('') }}>
+        <div className="mt-6 border border-gray-200 rounded-lg p-4">
+          <div className="flex items-center gap-4 mb-4">
+            <strong className="text-lg font-semibold text-charcoal">Editing business #{editingId}</strong>
+            <button className="ml-auto text-sm text-gray-600 hover:underline" onClick={() => { setEditingId(null); setEditData(null); setEditImages([]); setEditImageFile(null); setEditImageUrl('') }}>
               Close
             </button>
           </div>
 
-          {editLoading && <div>Loading…</div>}
+          {editLoading && <div className="text-gray-500">Loading…</div>}
 
           {editData && (
-            <div style={{ display:'grid', gap:10, maxWidth: 680 }}>
+            <div className="grid gap-4 max-w-2xl">
               {EDITABLE_FIELDS.map((k) => (
-                <label key={k} style={{ display:'grid', gap:6 }}>
-                  <div style={{ fontSize:12, opacity:0.8 }}>{k}</div>
+                <label key={k} className="block text-sm font-medium text-gray-700">
+                  <span className="capitalize">{k.replace('_', ' ')}</span>
                   {k === 'status' ? (
-                    <select name="status" value={(editData.status ?? 'pending') as string} onChange={editFieldChange}>
+                    <select name="status" value={(editData.status ?? 'pending') as string} onChange={editFieldChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
                       <option value="pending">pending</option>
                       <option value="approved">approved</option>
                       <option value="rejected">rejected</option>
                     </select>
                   ) : k === 'opening_hours' ? (
-                    <textarea name="opening_hours" rows={2} value={(editData.opening_hours as string) ?? ''} onChange={editFieldChange} />
+                    <textarea name="opening_hours" rows={2} value={(editData.opening_hours as string) ?? ''} onChange={editFieldChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
                   ) : k === 'description' ? (
-                    <textarea name="description" rows={3} value={(editData.description as string) ?? ''} onChange={editFieldChange} />
+                    <textarea name="description" rows={3} value={(editData.description as string) ?? ''} onChange={editFieldChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
                   ) : k === 'tags' ? (
-                    <input name="tags" value={Array.isArray(editData.tags) ? (editData.tags as string[]).join(', ') : (editData.tags as unknown as string) || ''} onChange={editFieldChange} placeholder="comma, separated, tags" />
+                    <input name="tags" value={Array.isArray(editData.tags) ? (editData.tags as string[]).join(', ') : (editData.tags as unknown as string) || ''} onChange={editFieldChange} placeholder="comma, separated, tags" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
                   ) : (
-                    <input name={k} value={(editData as any)[k] ?? ''} onChange={editFieldChange} />
+                    <input name={k} value={(editData as any)[k] ?? ''} onChange={editFieldChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
                   )}
                 </label>
               ))}
 
-              <fieldset style={{ border:'1px dashed #ddd', padding:10 }}>
-                <legend>Images</legend>
-                <div style={{ display:'grid', gap:8 }}>
-                  <div style={{ display:'flex', gap:8, flexWrap:'wrap' }}>
+              <fieldset className="border border-dashed border-gray-300 p-4 rounded-md">
+                <legend className="text-sm font-medium text-gray-700 px-1">Images</legend>
+                <div className="grid gap-4">
+                  <div className="flex gap-2 flex-wrap">
                     {editImages.map((im, i) => (
-                      <div key={i} style={{ position:'relative' }}>
-                        <img src={im.url} alt={im.alt || 'image'} style={{ width:96, height:64, objectFit:'cover', borderRadius:6 }} />
-                        <button type="button" onClick={() => removeEditImage(i)} style={{ position:'absolute', top:2, right:2 }}>✕</button>
+                      <div key={i} className="relative">
+                        <img src={im.url} alt={im.alt || 'image'} className="w-24 h-16 object-cover rounded-md" />
+                        <button type="button" onClick={() => removeEditImage(i)} className="absolute top-1 right-1 w-5 h-5 bg-black bg-opacity-50 text-white text-xs rounded-full flex items-center justify-center hover:bg-opacity-75">✕</button>
                       </div>
                     ))}
-                    {editImages.length === 0 && <div style={{ fontSize:12, opacity:0.7 }}>No images</div>}
+                    {editImages.length === 0 && <div className="text-xs text-gray-500">No images</div>}
                   </div>
-                  <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-                    <input type="file" accept="image/*" onChange={e => setEditImageFile(e.target.files?.[0] ?? null)} />
-                    {editImageFile && <span>{editImageFile.name}</span>}
+                  <div className="flex gap-2 items-center">
+                    <input type="file" accept="image/*" onChange={e => setEditImageFile(e.target.files?.[0] ?? null)} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-sand file:text-charcoal hover:file:bg-opacity-80" />
+                    {editImageFile && <span className="text-xs text-gray-500">{editImageFile.name}</span>}
                   </div>
-                  <div style={{ display:'flex', gap:8, alignItems:'center' }}>
-                    <input placeholder="Paste image URL" value={editImageUrl} onChange={e=>setEditImageUrl(e.target.value)} />
-                    <button type="button" onClick={addEditImageUrl}>Add URL</button>
+                  <div className="flex gap-2 items-center">
+                    <input placeholder="Paste image URL" value={editImageUrl} onChange={e=>setEditImageUrl(e.target.value)} className="flex-1 block w-full px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
+                    <button type="button" onClick={addEditImageUrl} className="px-3 py-2 text-sm bg-gray-200 text-charcoal rounded-md hover:bg-gray-300">Add URL</button>
                   </div>
                 </div>
               </fieldset>
 
-              <div style={{ display:'flex', gap:8 }}>
-                <button type="button" onClick={saveEdit} disabled={editSaving} aria-busy={editSaving}>
+              <div className="flex gap-4">
+                <button type="button" onClick={saveEdit} disabled={editSaving} aria-busy={editSaving} className="px-4 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400">
                   {editSaving ? 'Saving…' : 'Save changes'}
                 </button>
-                <button type="button" onClick={() => { setEditingId(null); setEditData(null); setEditImages([]); setEditImageFile(null); setEditImageUrl('') }}>
+                <button type="button" className="px-4 py-2 bg-gray-200 text-charcoal rounded-md hover:bg-gray-300" onClick={() => { setEditingId(null); setEditData(null); setEditImages([]); setEditImageFile(null); setEditImageUrl('') }}>
                   Cancel
                 </button>
               </div>
@@ -604,7 +604,7 @@ export default function Admin(){
         </div>
       )}
 
-      {err && <div style={{ color:'#b00020', marginTop:10 }} aria-live="polite">{err}</div>}
+      {err && <div className="text-coral mt-4" aria-live="polite">{err}</div>}
     </div>
   )
 }

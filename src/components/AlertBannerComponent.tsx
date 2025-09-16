@@ -169,36 +169,27 @@ export function AlertBanner() {
 
   return (
     <div
+      role="alert"
       onMouseEnter={() => { paused.current = true }}
       onMouseLeave={() => { paused.current = false }}
-      style={{
-        position: 'sticky', top: 0, zIndex: 50,
-        background: '#FFFBEB', borderBottom: '1px solid #FCD34D'
-      }}
+      className="sticky top-0 z-50 bg-amber-50 border-b border-amber-300"
     >
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '8px 12px' }}>
-        <div style={{
-          display: 'flex', gap: 8, alignItems: 'start',
-          border: '1px solid #FACC15', background: '#FEF3C7',
-          padding: '8px 10px', borderRadius: 8
-        }}>
+      <div className="max-w-4xl mx-auto px-3 py-2">
+        <div className="flex gap-2 items-start border border-amber-400 bg-amber-100 p-2 rounded-lg">
           <button
             onClick={() => setIdx(i => (i - 1 + alerts.length) % alerts.length)}
             aria-label="Previous alert"
-            style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: 18, padding: 4, opacity: 0.75 }}
+            className="border-none bg-transparent cursor-pointer text-lg p-1 opacity-75 hover:opacity-100"
           >‹</button>
 
-          <span style={{
-            fontSize: 12, fontWeight: 700, background: '#F59E0B', color: 'white',
-            padding: '2px 6px', borderRadius: 6, marginTop: 2, flex: '0 0 auto'
-          }}>
+          <span className="text-xs font-bold bg-amber-500 text-white px-1.5 py-0.5 rounded mt-0.5 flex-shrink-0">
             {a.category}
           </span>
 
-          <div style={{ flex: 1, lineHeight: 1.2 }}>
-            <div style={{ fontWeight: 700 }}>{a.title}</div>
-            {a.body && <div style={{ opacity: 0.85 }}>{a.body}</div>}
-            <div style={{ fontSize: 12, opacity: 0.75, marginTop: 2 }}>
+          <div className="flex-1 leading-tight text-sm">
+            <div className="font-bold text-amber-900">{a.title}</div>
+            {a.body && <div className="opacity-85">{a.body}</div>}
+            <div className="text-xs opacity-75 mt-0.5">
               {a.expires_at ? `expires ${new Date(a.expires_at).toLocaleString()}` : 'no expiry'}
             </div>
           </div>
@@ -206,34 +197,26 @@ export function AlertBanner() {
           <button
             onClick={() => setIdx(i => (i + 1) % alerts.length)}
             aria-label="Next alert"
-            style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: 18, padding: 4, opacity: 0.75 }}
+            className="border-none bg-transparent cursor-pointer text-lg p-1 opacity-75 hover:opacity-100"
           >›</button>
 
           <button
             onClick={() => hide(a.id)}
             title="Dismiss"
-            style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: 18, padding: 4, opacity: 0.75 }}
+            className="border-none bg-transparent cursor-pointer text-lg p-1 opacity-75 hover:opacity-100"
             aria-label="Dismiss alert"
           >×</button>
         </div>
 
         {alerts.length > 1 && (
-          <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginTop: 4 }}>
+          <div className="flex gap-1.5 justify-center mt-1">
             {alerts.map((_, i) => (
-              <span
-                key={i}
-                onClick={() => setIdx(i)}
-                style={{
-                  width: 8, height: 8, borderRadius: 9999,
-                  background: i === idx ? '#F59E0B' : '#FCD34D',
-                  cursor: 'pointer'
-                }}
-              />
+              <button key={i} onClick={() => setIdx(i)} aria-label={`Go to alert ${i + 1}`} className={`w-2 h-2 rounded-full cursor-pointer ${i === idx ? 'bg-amber-500' : 'bg-amber-300 hover:bg-amber-400'}`} />
             ))}
           </div>
         )}
 
-        {err && <div style={{ color: '#b00020' }}>{err}</div>}
+        {err && <div className="text-coral text-sm">{err}</div>}
       </div>
     </div>
   )

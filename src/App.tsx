@@ -10,9 +10,8 @@ import Admin from './pages/Admin'
 import Profile from './pages/Profile'
 import AuthProvider, { useAuth } from './components/AuthProvider'
 import type { ReactNode } from 'react'
-import LiveRailBanner from './components/LiveRailBanner'
 import StaticPage from './pages/StaticPage'
-import AdminPages from './pages/AdminPages' // Import PagesAdmin component
+import AdminPages from './pages/AdminPages'
 import RecyclingHub from './pages/RecyclingHub'
 
 
@@ -34,26 +33,26 @@ export default function App() {
   return (
     <AuthProvider>
       <>
-        <div style={{ position: 'sticky', top: 0, zIndex: 50 }}></div> 
         <AlertBanner />
-        <LiveRailBanner />
-        <div style={{ maxWidth: 900, margin: '32px auto', fontFamily: 'system-ui, sans-serif' }}>
-          <NavBar />
-          <Routes>
+        <NavBar />
+        <main className="max-w-4xl mx-auto px-4 py-6">
+          <div className="space-y-6">
+            <Routes>
             <Route path="/" element={<Feed />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/events" element={<Events />} />
             <Route path="/businesses" element={<Businesses />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/history" element={<StaticPage slug="history" />} />
-            <Route path="/tourism" element={<StaticPage slug="tourism" />} />
-            <Route path="/wildlife" element={<StaticPage slug="wildlife" />} />
-            <Route path="/earhart" element={<StaticPage slug="earhart" />} />
-            <Route path="/harbour" element={<StaticPage slug="harbour" />} />
-            <Route path="/faq" element={<StaticPage slug="faq" />} />
-            <Route path="/transport" element={<StaticPage slug="transport" />} />
-            <Route path="/schools" element={<StaticPage slug="schools" />} />
-            <Route path="/pembrey-country-park" element={<StaticPage slug="pembrey-country-park" />} />
+            {/* Wrap static pages in a layout container with prose for styling */}
+            <Route path="/history" element={<div className="prose max-w-none"><StaticPage slug="history" /></div>} />
+            <Route path="/tourism" element={<div className="prose max-w-none"><StaticPage slug="tourism" /></div>} />
+            <Route path="/wildlife" element={<div className="prose max-w-none"><StaticPage slug="wildlife" /></div>} />
+            <Route path="/earhart" element={<div className="prose max-w-none"><StaticPage slug="earhart" /></div>} />
+            <Route path="/harbour" element={<div className="prose max-w-none"><StaticPage slug="harbour" /></div>} />
+            <Route path="/faq" element={<div className="prose max-w-none"><StaticPage slug="faq" /></div>} />
+            <Route path="/transport" element={<div className="prose max-w-none"><StaticPage slug="transport" /></div>} />
+            <Route path="/schools" element={<div className="prose max-w-none"><StaticPage slug="schools" /></div>} />
+            <Route path="/pembrey-country-park" element={<div className="prose max-w-none"><StaticPage slug="pembrey-country-park" /></div>} />
             <Route path="/recyclingHub" element={<RecyclingHub />} />
 
           <Route
@@ -74,8 +73,9 @@ export default function App() {
             />
 
             <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
+            </Routes>
+          </div>
+        </main>
       </>
     </AuthProvider>
   )

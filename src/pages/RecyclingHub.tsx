@@ -98,19 +98,19 @@ export default function RecyclingHub() {
   }
 
   return (
-    <div>
+    <div className="space-y-6">
       {/* Static MDX page content (editable in admin) */}
       <StaticPage slug="recycling" />
 
       {/* Filters */}
-      <div style={{display:'flex', gap:12, flexWrap:'wrap', margin:'8px 0'}}>
+      <div className="flex gap-2 flex-wrap">
         {CHIP_TAGS.map(c => {
           const on = selectedTags.includes(c.slug)
           return (
             <button key={c.slug} onClick={() =>
               setSelectedTags(t => t.includes(c.slug) ? t.filter(s => s!==c.slug) : [...t, c.slug])
             } aria-pressed={on}
-              style={{padding:'6px 10px', borderRadius:16, border:'1px solid #e5e7eb', background:on?'#e0f2fe':'#fff'}}>
+              className={`px-3 py-1 text-sm rounded-full border ${on ? 'bg-teal-100 text-teal-800 border-teal-200' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>
               {c.label}
             </button>
           )
@@ -121,7 +121,7 @@ export default function RecyclingHub() {
             <button key={k} onClick={() =>
               setKindsFilter(kf => kf.includes(k) ? kf.filter(x => x!==k) : [...kf, k])
             } aria-pressed={on}
-              style={{padding:'6px 10px', borderRadius:16, border:'1px dashed #e5e7eb', background:on?'#eef':'#fff'}}>
+              className={`px-3 py-1 text-sm rounded-full border border-dashed ${on ? 'bg-indigo-100 text-indigo-800 border-indigo-200' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>
               {k}
             </button>
           )
@@ -129,26 +129,26 @@ export default function RecyclingHub() {
       </div>
 
       {/* Feed */}
-      <ul style={{listStyle:'none', padding:0, display:'grid', gap:12}}>
+      <ul className="list-none p-0 grid gap-4">
         {items.map(it => (
-          <li key={`${it.kind}-${it.ref_id}`} style={{padding:12, border:'1px solid #e5e7eb', borderRadius:8}}>
-            <div style={{display:'grid', gridTemplateColumns:'80px 1fr', gap:12, alignItems:'center'}}>
-              <div style={{background:'#f3f4f6', width:'100%', aspectRatio:'1/1', borderRadius:6, overflow:'hidden'}}>
-                {imgOf(it) ? <img src={imgOf(it)!} alt={it.title} style={{width:'100%', height:'100%', objectFit:'cover'}}/> : null}
+          <li key={`${it.kind}-${it.ref_id}`} className="p-4 bg-white border border-gray-200 rounded-lg">
+            <div className="grid grid-cols-[80px_1fr] gap-4 items-center">
+              <div className="bg-sand w-full aspect-square rounded-md overflow-hidden">
+                {imgOf(it) ? <img src={imgOf(it)!} alt={it.title} className="w-full h-full object-cover"/> : null}
               </div>
               <div>
-                <div style={{fontSize:12, opacity:0.65, marginBottom:2}}>{it.kind.toUpperCase()}</div>
-                <div style={{fontWeight:700}}>{it.title}</div>
-                {it.meta && <div style={{fontSize:12, opacity:0.8, marginTop:4}}>{it.meta}</div>}
-                <div style={{marginTop:6}}><a href={hrefFor(it)}>View</a></div>
+                <div className="text-xs font-semibold tracking-wider uppercase text-gray-500 mb-1">{it.kind}</div>
+                <div className="font-bold text-charcoal">{it.title}</div>
+                {it.meta && <div className="text-sm text-gray-600 mt-1">{it.meta}</div>}
+                <div className="mt-2"><a href={hrefFor(it)} className="text-sm text-teal-700 hover:underline">View</a></div>
               </div>
             </div>
           </li>
         ))}
       </ul>
 
-      {items.length === 0 && !err && <div>No recycling content yet—add the <code>recycling</code> tag to some entries.</div>}
-      {err && <div style={{color:'#b00020', marginTop:10}}>{err}</div>}
+      {items.length === 0 && !err && <div className="text-gray-500">No recycling content yet—add the <code>recycling</code> tag to some entries.</div>}
+      {err && <div className="text-coral mt-4">{err}</div>}
     </div>
   )
 }

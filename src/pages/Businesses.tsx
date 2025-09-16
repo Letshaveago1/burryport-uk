@@ -222,10 +222,10 @@ export default function Businesses() {
   // ----------------- end AIO / SEO layer -------------
 
   return (
-    <div>
-      <h2>Businesses</h2>
+    <div className="space-y-6">
+      <h2 className="text-3xl font-bold text-charcoal">Businesses</h2>
 
-      <ul style={{ listStyle: 'none', padding: 0, display: 'grid', gap: 12 }}>
+      <ul className="list-none p-0 flex flex-col gap-4">
         {rows.map((b) => {
           const rawCover = pickCoverUrl(b.images as unknown)
           const cover = ensureHttp(rawCover || null)
@@ -235,82 +235,54 @@ export default function Businesses() {
           const yourClaim = myClaims[b.id]
 
           return (
-            <li
-              id={`biz-${b.id}`}
-              key={b.id}
-              style={{ border: '1px solid #e5e7eb', borderRadius: 10, overflow: 'hidden' }}
-            >
-              <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr', gap: 12 }}>
-                {/* Image column */}
-                <div
-                  style={{
-                    background: '#f3f4f6',
-                    width: '100%',
-                    position: 'relative',
-                    paddingTop: '75%', // 4:3 aspect ratio
-                    overflow: 'hidden',
-                  }}
-                >
+            <li id={`biz-${b.id}`} key={b.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+              <div className="flex gap-4">
+                {/* Image column - fixed size. Use flex-shrink-0 to prevent it from shrinking. */}
+                <div className="bg-sand w-[120px] h-[120px] relative flex-shrink-0">
                   {cover ? (
                     <img
                       src={cover}
-                      alt={
-                        (Array.isArray(b.images) &&
-                          (b.images[0] as any)?.alt) ||
-                        b.name
-                      }
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: chooseFit(cover),
-                        objectPosition: 'center',
-                        display: 'block',
-                      }}
+                      alt={(Array.isArray(b.images) && (b.images[0] as any)?.alt) || b.name}
+                      className="absolute inset-0 w-full h-full block object-cover"
+                      style={{ objectFit: chooseFit(cover), objectPosition: 'center' }}
                       onError={(e) => {
                         const el = e.currentTarget as HTMLImageElement
                         el.onerror = null
                         el.src = PLACEHOLDER_DATA_URI
                       }}
                     />
-                  ) : (
-                    <div style={{ position: 'absolute', inset: 0 }} />
-                  )}
+                  ) : null}
                 </div>
 
                 {/* Details column */}
-                <div style={{ padding: 10 }}>
-                  <div style={{ fontWeight: 700 }}>{b.name}</div>
-                  <div style={{ fontSize: 12, opacity: 0.75 }}>{b.category || '—'}</div>
+                <div className="p-3 flex-1 min-w-0">
+                  <div className="font-bold text-charcoal">{b.name}</div>
+                  <div className="text-sm text-gray-600">{b.category || '—'}</div>
                   {b.address && (
-                    <div style={{ fontSize: 12, opacity: 0.85, marginTop: 4 }}>{b.address}</div>
+                    <div className="text-xs text-gray-500 mt-1">{b.address}</div>
                   )}
-                  <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+                  <div className="flex gap-4 mt-2">
                     {site && (
-                      <a href={site} target="_blank" rel="noreferrer noopener">
+                      <a href={site} target="_blank" rel="noreferrer noopener" className="text-sm text-teal-700 hover:underline">
                         Website
                       </a>
                     )}
-                    {b.phone && <a href={`tel:${b.phone.replace(/\s+/g, '')}`}>Call</a>}
+                    {b.phone && <a href={`tel:${b.phone.replace(/\s+/g, '')}`} className="text-sm text-teal-700 hover:underline">Call</a>}
                   </div>
 
-                  <div style={{ marginTop: 8 }}>
+                  <div className="mt-3">
                     {youOwn && (
-                      <span style={{ fontSize: 12, color: '#059669' }}>
+                      <span className="text-xs font-semibold text-teal-800 bg-teal-100 px-2 py-1 rounded-full">
                         You own this business
                       </span>
                     )}
                     {!youOwn && yourClaim && yourClaim.status === 'pending' && (
-                      <span style={{ fontSize: 12, color: '#b45309' }}>
+                      <span className="text-xs font-semibold text-amber-800 bg-amber-100 px-2 py-1 rounded-full">
                         Your claim is pending review
                       </span>
                     )}
                     {!youOwn && canClaim && (
-                      <button onClick={() => claim(b)} aria-label={`Claim ${b.name}`}>
+                      <button onClick={() => claim(b)} aria-label={`Claim ${b.name}`} className="px-3 py-1 text-xs bg-sand text-charcoal rounded-md hover:bg-opacity-80">
                         Claim this business
                       </button>
                     )}
@@ -322,8 +294,8 @@ export default function Businesses() {
         })}
       </ul>
 
-      {rows.length === 0 && <div>No approved businesses yet.</div>}
-      {err && <div style={{ color: '#b00020', marginTop: 10 }}>{err}</div>}
+      {rows.length === 0 && <div className="text-gray-500">No approved businesses yet.</div>}
+      {err && <div className="text-coral mt-4">{err}</div>}
     </div>
   )
 }

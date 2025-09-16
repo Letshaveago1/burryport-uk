@@ -136,57 +136,52 @@ export default function Profile() {
       : 'User avatar'
 
   return (
-    <div>
-      <h2>Profile</h2>
-      <div style={{ display: 'grid', gap: 10, maxWidth: 460 }}>
-        <label htmlFor={idUsername}>
-          <div>Username</div>
+    <div className="space-y-6">
+      <h2 className="text-3xl font-bold text-charcoal">Profile</h2>
+      <div className="grid gap-6 max-w-lg p-4 bg-white border border-gray-200 rounded-lg">
+        <label htmlFor={idUsername} className="block text-sm font-medium text-gray-700">
+          Username
           <input
             id={idUsername}
             value={username}
             onChange={e => setUsername(e.target.value)}
             placeholder="yourname"
             autoComplete="nickname"
+            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
           />
         </label>
 
         <div>
-          <label htmlFor={idAvatar}>
-            <div>Avatar</div>
+          <label htmlFor={idAvatar} className="block text-sm font-medium text-gray-700">
+            Avatar
           </label>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="mt-1 flex items-center gap-4">
             <img
               src={displayAvatar}
               alt={altText}
-              style={{ width: 64, height: 64, borderRadius: '50%', objectFit: 'cover', background: '#eee' }}
+              className="w-16 h-16 rounded-full object-cover bg-gray-200"
             />
-            <input
-              id={idAvatar}
-              type="file"
-              accept="image/*"
-              onChange={e => onPickFile(e.target.files?.[0] ?? null)}
-            />
+            <label htmlFor={idAvatar} className="cursor-pointer px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              Change
+              <input id={idAvatar} type="file" accept="image/*" className="sr-only" onChange={e => onPickFile(e.target.files?.[0] ?? null)} />
+            </label>
             {(avatarUrl || previewUrl) && (
-              <button type="button" onClick={removeCurrentAvatar} title="Remove avatar">
+              <button type="button" onClick={removeCurrentAvatar} title="Remove avatar" className="text-sm text-coral hover:underline">
                 Remove
               </button>
             )}
           </div>
-          <div style={{ fontSize: 12, opacity: 0.7, marginTop: 4 }}>
+          <div className="text-xs text-gray-500 mt-2">
             JPG/PNG/WebP, up to 5&nbsp;MB.
           </div>
         </div>
 
-        <button type="button" onClick={save} disabled={saving} aria-busy={saving}>
+        <button type="button" onClick={save} disabled={saving} aria-busy={saving} className="w-full sm:w-auto px-6 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
           {saving ? 'Saving…' : 'Save changes'}
         </button>
 
-        {err && (
-          <div style={{ color: '#b00020' }} aria-live="polite">
-            {err}
-          </div>
-        )}
+        {err && <div className="text-coral" aria-live="polite">{err}</div>}
       </div>
     </div>
   )
