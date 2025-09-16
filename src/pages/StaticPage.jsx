@@ -193,7 +193,7 @@ export default function StaticPage({ slug }) {
     : null
 
   return (
-    <main className="mx-auto max-w-screen-sm p-4">
+    <div className="mx-auto max-w-screen-sm">
       <h1 className="text-2xl font-semibold mb-1">{doc.title}</h1>
       {updated && <div style={{fontSize:12,opacity:0.7, marginBottom:12}}>Last updated {updated}</div>}
 
@@ -215,6 +215,6 @@ export default function StaticPage({ slug }) {
           </ol>
         </aside>
       )}
-    </main>
+    </div>
   )
 }

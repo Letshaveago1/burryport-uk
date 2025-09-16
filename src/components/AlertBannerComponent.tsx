@@ -172,10 +172,10 @@ export function AlertBanner() {
       role="alert"
       onMouseEnter={() => { paused.current = true }}
       onMouseLeave={() => { paused.current = false }}
-      className="sticky top-0 z-50 bg-amber-50 border-b border-amber-300"
+      className="sticky top-0 z-50 border-b border-amber-300/50"
     >
       <div className="max-w-4xl mx-auto px-3 py-2">
-        <div className="flex gap-2 items-start border border-amber-400 bg-amber-100 p-2 rounded-lg">
+        <div className="flex gap-2 items-start border border-amber-400/80 bg-amber-50 p-2 rounded-lg">
           <button
             onClick={() => setIdx(i => (i - 1 + alerts.length) % alerts.length)}
             aria-label="Previous alert"

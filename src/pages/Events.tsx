@@ -206,32 +206,32 @@ export default function Events() {
       <h2 className="text-3xl font-bold text-charcoal">Events</h2>
 
       {/* create form */}
-      <div className="grid gap-4 p-4 bg-white border border-gray-200 rounded-lg">
+      <div className="grid gap-4">
         <label htmlFor={idTitle} className="block text-sm font-medium text-gray-700">Event title
-          <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Beach Clean" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Beach Clean" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idDesc} className="block text-sm font-medium text-gray-700">Description
-          <textarea id={idDesc} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What’s happening?" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <textarea id={idDesc} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What’s happening?" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idVenue} className="block text-sm font-medium text-gray-700">Venue
-          <input id={idVenue} value={venue} onChange={e=>setVenue(e.target.value)} placeholder="e.g. Harbour Square" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idVenue} value={venue} onChange={e=>setVenue(e.target.value)} placeholder="e.g. Harbour Square" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idStarts} className="block text-sm font-medium text-gray-700">Starts at
-          <input id={idStarts} type="datetime-local" value={starts} onChange={e=>setStarts(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idStarts} type="datetime-local" value={starts} onChange={e=>setStarts(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idEnds} className="block text-sm font-medium text-gray-700">Ends at (optional)
-          <input id={idEnds} type="datetime-local" value={ends} onChange={e=>setEnds(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idEnds} type="datetime-local" value={ends} onChange={e=>setEnds(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idLink} className="block text-sm font-medium text-gray-700">Link (optional)
-          <input id={idLink} type="url" value={link} onChange={e=>setLink(e.target.value)} placeholder="https://…" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idLink} type="url" value={link} onChange={e=>setLink(e.target.value)} placeholder="https://…" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
-        <button type="button" disabled={!me || creating} onClick={createEvent} aria-busy={creating} className="w-full sm:w-auto px-6 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
+        <button type="button" disabled={!me || creating} onClick={createEvent} aria-busy={creating} className="w-full sm:w-auto px-6 py-2 bg-sea text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
           {creating ? 'Creating…' : 'Create event'}
         </button>
       </div>
@@ -242,7 +242,7 @@ export default function Events() {
           const p = ev.organizer_id ? profiles[ev.organizer_id] : undefined
           const alt = p?.username ? `${p.username}'s avatar` : 'Organizer avatar'
           return (
-            <li id={`event-${ev.id}`} key={ev.id} className="p-4 bg-white border border-gray-200 rounded-lg">
+            <li id={`event-${ev.id}`} key={ev.id} className="p-4 border border-sea/20 rounded-lg">
               <div className="flex items-center gap-3">
                 <img
                   src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
@@ -260,21 +260,21 @@ export default function Events() {
               {ev.description && <div className="mt-2 whitespace-pre-wrap">{ev.description}</div>}
               <div className="text-xs text-gray-500 mt-2">
                 {ev.venue || '—'}{ev.ends_at ? ` · ends ${new Date(ev.ends_at).toLocaleString()}` : ''}
-                {ev.link ? <> · <a href={ev.link} target="_blank" rel="noreferrer" className="text-teal-700 hover:underline">link</a></> : null}
+                {ev.link ? <> · <a href={ev.link} target="_blank" rel="noreferrer" className="text-sea hover:underline">link</a></> : null}
               </div>
 
               {/* owner controls */}
               {me && ev.organizer_id === me && (
                 <div className="mt-3">
-                  <button type="button" onClick={()=>deleteEvent(ev.id)} aria-label={`Delete event ${ev.title}`} className="text-sm text-coral hover:underline">Delete</button>
+                  <button type="button" onClick={()=>deleteEvent(ev.id)} aria-label={`Delete event ${ev.title}`} className="text-sm text-lighthouse hover:underline">Delete</button>
                 </div>
               )}
             </li>
           )
         })}
       </ul>
-
-      {err && <div className="text-coral" aria-live="polite">{err}</div>}
+      
+      {err && <div className="text-lighthouse" aria-live="polite">{err}</div>}
     </div>
   )
 }

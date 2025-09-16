@@ -37,7 +37,7 @@ export default function NavBar() {
   )
 
   return (
-    <header className="border-b border-gray-200 bg-white relative" ref={menuRef}>
+    <header className="border-b border-sea/20 relative" ref={menuRef}>
       <div className="max-w-4xl mx-auto px-4 py-2.5 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 font-bold text-charcoal hover:opacity-90">BurryPort.uk</Link>
 
@@ -45,7 +45,7 @@ export default function NavBar() {
         <button
           aria-label="Toggle menu"
           aria-expanded={open}
-          className="md:hidden inline-flex items-center justify-center w-10 h-10 border border-gray-300 rounded-md bg-white"
+          className="md:hidden inline-flex items-center justify-center w-10 h-10 border border-gray-300 rounded-md"
           onClick={() => setOpen((v) => !v)}
         >
           {/* simple hamburger icon */}
@@ -55,7 +55,7 @@ export default function NavBar() {
         </button>
 
         {/* Menu */}
-        <nav className={`absolute md:relative top-full left-0 w-full md:w-auto bg-white border-b md:border-none ${open ? 'block' : 'hidden'} md:block`} aria-label="Main">
+        <nav className={`absolute md:relative top-full left-0 w-full md:w-auto bg-sand md:bg-transparent border-b md:border-none ${open ? 'block' : 'hidden'} md:block`} aria-label="Main">
           <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-2 p-2">
             <NavLink to="/">Feed</NavLink>
             <NavLink to="/alerts">Alerts</NavLink>
@@ -74,7 +74,7 @@ export default function NavBar() {
                 Explore
               </button>
               <div className={`${exploreOpen ? 'block' : 'hidden'} absolute top-full left-0 mt-1 w-screen max-w-xs sm:max-w-sm z-10`} role="menu">
-                <div className="grid grid-cols-2 gap-1 p-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <div className="grid grid-cols-2 gap-1 p-2 bg-sand border border-sea/20 rounded-lg shadow-lg">
                   <Link className="px-3 py-2 rounded-md text-gray-600 hover:bg-sand" to="/history">History</Link>
                   <Link className="px-3 py-2 rounded-md text-gray-600 hover:bg-sand" to="/tourism">Tourism</Link>
                   <Link className="px-3 py-2 rounded-md text-gray-600 hover:bg-sand" to="/wildlife">Wildlife</Link>

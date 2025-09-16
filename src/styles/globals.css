@@ -1,3 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --color-sand: #E6D4B8;
+  --color-sea: #0A6E7D;
+  --color-lighthouse: #B45309;
+  --color-charcoal: #2C3E50;
+  --color-pine: #345D3B;
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-sand text-charcoal font-sans;
+  }
+}

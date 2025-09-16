@@ -132,7 +132,7 @@ export default function PostCard({ post }: { post: Post }) {
   }
 
   return (
-    <div className="p-4 bg-white border border-gray-200 rounded-lg">
+    <div className="p-4 border border-sea/20 rounded-lg">
       {/* header: avatar + author + date */}
       <div className="flex items-center gap-3">
         <img
@@ -168,7 +168,7 @@ export default function PostCard({ post }: { post: Post }) {
       {commentsOpen && (
         <div className="mt-3 grid gap-3">
           <div className="flex gap-2">
-            <input placeholder="Write a comment…" value={newComment} onChange={e => setNewComment(e.target.value)} className="flex-1 px-3 py-2 text-sm bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
+            <input placeholder="Write a comment…" value={newComment} onChange={e => setNewComment(e.target.value)} className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
             <button onClick={addComment} disabled={!newComment.trim()} className="px-4 py-2 text-sm bg-sand text-charcoal rounded-md hover:bg-opacity-80 disabled:opacity-50">Post</button>
           </div>
 

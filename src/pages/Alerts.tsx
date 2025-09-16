@@ -203,9 +203,9 @@ export default function Alerts() {
       <h2 className="text-3xl font-bold text-charcoal">Alerts</h2>
 
       {/* create form */}
-      <div className="grid gap-4 p-4 bg-white border border-gray-200 rounded-lg">
+      <div className="grid gap-4">
         <label htmlFor={idCat} className="block text-sm font-medium text-gray-700">Category
-          <select id={idCat} value={cat} onChange={e=>setCat(e.target.value as any)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm">
+          <select id={idCat} value={cat} onChange={e=>setCat(e.target.value as any)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm">
             <option value="general">general</option>
             <option value="transport">transport</option>
             <option value="closure">closure</option>
@@ -213,20 +213,20 @@ export default function Alerts() {
             <option value="weather">weather</option>
           </select>
         </label>
-
+        
         <label htmlFor={idTitle} className="block text-sm font-medium text-gray-700">Alert title
-          <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Road closed on High St" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Road closed on High St" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idBody} className="block text-sm font-medium text-gray-700">Alert body
-          <textarea id={idBody} value={body} onChange={e=>setBody(e.target.value)} placeholder="Details (optional)" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <textarea id={idBody} value={body} onChange={e=>setBody(e.target.value)} placeholder="Details (optional)" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idExpires} className="block text-sm font-medium text-gray-700">Expires at
-          <input id={idExpires} type="datetime-local" value={exp} onChange={e=>setExp(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+          <input id={idExpires} type="datetime-local" value={exp} onChange={e=>setExp(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
-        <button type="button" disabled={!me || creating} onClick={createAlert} aria-busy={creating} className="w-full sm:w-auto px-6 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
+        <button type="button" disabled={!me || creating} onClick={createAlert} aria-busy={creating} className="w-full sm:w-auto px-6 py-2 bg-sea text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
           {creating ? 'Creating…' : 'Create alert'}
         </button>
       </div>
@@ -238,7 +238,7 @@ export default function Alerts() {
           const mine = me && a.author_id === me
           const canDelete = !!mine || isMod
           return (
-            <li id={`alert-${a.id}`} key={a.id} className="p-4 bg-white border border-gray-200 rounded-lg">
+            <li id={`alert-${a.id}`} key={a.id} className="p-4 border border-sea/20 rounded-lg">
               <div className="flex items-center gap-3">
                 <img
                   src={p?.avatar_url || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='}
@@ -264,13 +264,13 @@ export default function Alerts() {
                     type="button"
                     onClick={() => { if (confirm('Delete this alert?')) deleteAlert(a.id) }}
                     aria-label={`Delete alert ${a.title}`}
-                    className="text-sm text-coral hover:underline"
+                    className="text-sm text-lighthouse hover:underline"
                   >
                     Delete
                   </button>
                 )}
                 {isMod && (
-                  <button type="button" onClick={() => togglePriority(a)} aria-pressed={a.priority === 1} className="text-sm text-teal-700 hover:underline">
+                  <button type="button" onClick={() => togglePriority(a)} aria-pressed={a.priority === 1} className="text-sm text-sea hover:underline">
                     {a.priority === 1 ? 'Unmark High Priority' : 'Mark High Priority'}
                   </button>
                 )}
@@ -279,8 +279,8 @@ export default function Alerts() {
           )
         })}
       </ul>
-
-      {err && <div className="text-coral" aria-live="polite">{err}</div>}
+      
+      {err && <div className="text-lighthouse" aria-live="polite">{err}</div>}
     </div>
   )
 }

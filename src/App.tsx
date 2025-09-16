@@ -28,11 +28,7 @@ function ProtectedRoute({
 
 // A simple layout component to wrap static pages with prose styling
 function StaticPageLayout({ slug }: { slug: string }) {
-  return (
-    <div className="prose max-w-none">
-      <StaticPage slug={slug} />
-    </div>
-  );
+  return <StaticPage slug={slug} />;
 }
 
 // A shared layout component for all pages
@@ -42,10 +38,8 @@ function Layout() {
       <AlertBanner />
       <NavBar />
       <main className="max-w-4xl mx-auto px-4 py-6">
-        <div className="space-y-6">
-          {/* Child routes will render here */}
-          <Outlet />
-        </div>
+        {/* Child routes will render here */}
+        <Outlet />
       </main>
     </>
   );

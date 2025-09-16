@@ -110,7 +110,7 @@ export default function RecyclingHub() {
             <button key={c.slug} onClick={() =>
               setSelectedTags(t => t.includes(c.slug) ? t.filter(s => s!==c.slug) : [...t, c.slug])
             } aria-pressed={on}
-              className={`px-3 py-1 text-sm rounded-full border ${on ? 'bg-teal-100 text-teal-800 border-teal-200' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>
+              className={`px-3 py-1 text-sm rounded-full border ${on ? 'bg-sea/20 text-sea border-sea/30' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>
               {c.label}
             </button>
           )
@@ -131,24 +131,23 @@ export default function RecyclingHub() {
       {/* Feed */}
       <ul className="list-none p-0 grid gap-4">
         {items.map(it => (
-          <li key={`${it.kind}-${it.ref_id}`} className="p-4 bg-white border border-gray-200 rounded-lg">
-            <div className="grid grid-cols-[80px_1fr] gap-4 items-center">
-              <div className="bg-sand w-full aspect-square rounded-md overflow-hidden">
+          <li key={`${it.kind}-${it.ref_id}`} className="p-4 border border-sea/20 rounded-lg">
+            <div className="grid grid-cols-[80px_1fr] gap-4 items-start">
+              <div className="bg-gray-100 w-full aspect-square rounded-md overflow-hidden">
                 {imgOf(it) ? <img src={imgOf(it)!} alt={it.title} className="w-full h-full object-cover"/> : null}
               </div>
               <div>
                 <div className="text-xs font-semibold tracking-wider uppercase text-gray-500 mb-1">{it.kind}</div>
                 <div className="font-bold text-charcoal">{it.title}</div>
                 {it.meta && <div className="text-sm text-gray-600 mt-1">{it.meta}</div>}
-                <div className="mt-2"><a href={hrefFor(it)} className="text-sm text-teal-700 hover:underline">View</a></div>
+                <div className="mt-2"><a href={hrefFor(it)} className="text-sm text-sea hover:underline">View</a></div>
               </div>
             </div>
           </li>
         ))}
       </ul>
-
       {items.length === 0 && !err && <div className="text-gray-500">No recycling content yet—add the <code>recycling</code> tag to some entries.</div>}
-      {err && <div className="text-coral mt-4">{err}</div>}
+      {err && <div className="text-lighthouse mt-4">{err}</div>}
     </div>
   )
 }

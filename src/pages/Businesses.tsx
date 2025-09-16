@@ -224,7 +224,7 @@ export default function Businesses() {
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-charcoal">Businesses</h2>
-
+      
       <ul className="list-none p-0 flex flex-col gap-4">
         {rows.map((b) => {
           const rawCover = pickCoverUrl(b.images as unknown)
@@ -235,10 +235,10 @@ export default function Businesses() {
           const yourClaim = myClaims[b.id]
 
           return (
-            <li id={`biz-${b.id}`} key={b.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+            <li id={`biz-${b.id}`} key={b.id} className="border border-sea/20 rounded-lg overflow-hidden shadow-sm">
               <div className="flex gap-4">
                 {/* Image column - fixed size. Use flex-shrink-0 to prevent it from shrinking. */}
-                <div className="bg-sand w-[120px] h-[120px] relative flex-shrink-0">
+                <div className="bg-gray-100 w-[120px] h-[120px] relative flex-shrink-0">
                   {cover ? (
                     <img
                       src={cover}
@@ -263,11 +263,11 @@ export default function Businesses() {
                   )}
                   <div className="flex gap-4 mt-2">
                     {site && (
-                      <a href={site} target="_blank" rel="noreferrer noopener" className="text-sm text-teal-700 hover:underline">
+                      <a href={site} target="_blank" rel="noreferrer noopener" className="text-sm text-sea hover:underline">
                         Website
                       </a>
                     )}
-                    {b.phone && <a href={`tel:${b.phone.replace(/\s+/g, '')}`} className="text-sm text-teal-700 hover:underline">Call</a>}
+                    {b.phone && <a href={`tel:${b.phone.replace(/\s+/g, '')}`} className="text-sm text-sea hover:underline">Call</a>}
                   </div>
 
                   <div className="mt-3">
@@ -295,7 +295,7 @@ export default function Businesses() {
       </ul>
 
       {rows.length === 0 && <div className="text-gray-500">No approved businesses yet.</div>}
-      {err && <div className="text-coral mt-4">{err}</div>}
+      {err && <div className="text-lighthouse mt-4">{err}</div>}
     </div>
   )
 }

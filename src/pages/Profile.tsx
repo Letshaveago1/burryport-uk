@@ -138,7 +138,7 @@ export default function Profile() {
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-charcoal">Profile</h2>
-      <div className="grid gap-6 max-w-lg p-4 bg-white border border-gray-200 rounded-lg">
+      <div className="grid gap-6 max-w-lg p-4 border border-sea/20 rounded-lg">
         <label htmlFor={idUsername} className="block text-sm font-medium text-gray-700">
           Username
           <input
@@ -147,7 +147,7 @@ export default function Profile() {
             onChange={e => setUsername(e.target.value)}
             placeholder="yourname"
             autoComplete="nickname"
-            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
           />
         </label>
 
@@ -162,7 +162,7 @@ export default function Profile() {
               alt={altText}
               className="w-16 h-16 rounded-full object-cover bg-gray-200"
             />
-            <label htmlFor={idAvatar} className="cursor-pointer px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+            <label htmlFor={idAvatar} className="cursor-pointer px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
               Change
               <input id={idAvatar} type="file" accept="image/*" className="sr-only" onChange={e => onPickFile(e.target.files?.[0] ?? null)} />
             </label>

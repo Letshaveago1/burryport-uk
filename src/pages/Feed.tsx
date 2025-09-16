@@ -16,7 +16,7 @@ export default function Feed() {
     metas: [
       { property: 'og:title', content: 'Burry Port – Local Guide & Live Info' },
       { property: 'og:description', content: 'Harbour, coastal path, Pembrey Country Park, events and businesses.' },
-      { name: 'theme-color', content: '#0ea5e9' }
+      { name: 'theme-color', content: '#0A6E7D' }
     ],
     jsonLd: [websiteSchema(), organizationSchema()],
   })
@@ -203,8 +203,8 @@ export default function Feed() {
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-charcoal">Feed</h2>
-
-      <div className="grid gap-4 p-4 bg-white border border-gray-200 rounded-lg">
+      
+      <div className="grid gap-4">
         {userEmail ? (
           <div className="text-sm">
             Signed in as <b className="font-semibold">{userEmail}</b>{' '}
@@ -215,21 +215,21 @@ export default function Feed() {
             <label htmlFor={idEmail}>
               <span className="block text-sm font-medium text-gray-700">Email</span>
               <input id={idEmail} type="email" value={email} onChange={e => setEmail(e.target.value)} autoComplete="email" placeholder="you@example.com"
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm"
               />
             </label>
 
             <label htmlFor={idPw}>
               <span className="block text-sm font-medium text-gray-700">Password</span>
               <input id={idPw} type="password" value={pw} onChange={e => setPw(e.target.value)} autoComplete="current-password" placeholder="Your password"
-                className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm"
               />
             </label>
 
             <div className="flex items-center gap-4 flex-wrap">
-              <button type="button" onClick={signIn} className="px-4 py-2 bg-charcoal text-white rounded-md hover:bg-opacity-90">Sign in</button>
+              <button type="button" onClick={signIn} className="px-4 py-2 bg-sea text-white rounded-md hover:bg-opacity-90">Sign in</button>
               <span className="text-gray-500">or</span>
-              <button type="button" onClick={signInWithGoogle} className="px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+              <button type="button" onClick={signInWithGoogle} className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
                 Continue with Google
               </button>
             </div>
@@ -239,12 +239,12 @@ export default function Feed() {
         <div className="grid gap-4">
           <label htmlFor={idTitle}>
             <span className="block text-sm font-medium text-gray-700">Post title</span>
-            <input id={idTitle} value={title} onChange={e => setTitle(e.target.value)} placeholder="What’s happening?" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+            <input id={idTitle} value={title} onChange={e => setTitle(e.target.value)} placeholder="What’s happening?" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
           </label>
 
           <label htmlFor={idContent}>
             <span className="block text-sm font-medium text-gray-700">Post content</span>
-            <textarea id={idContent} value={content} onChange={e => setContent(e.target.value)} placeholder="Add details…" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm" />
+            <textarea id={idContent} value={content} onChange={e => setContent(e.target.value)} placeholder="Add details…" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
           </label>
         </div>
 
@@ -258,7 +258,7 @@ export default function Feed() {
           {previewUrl && (
             <div className="flex items-center gap-4">
               <img src={previewUrl} alt={title ? `Preview: ${title}` : 'Selected image preview'} className="max-h-32 rounded-lg" />
-              <button type="button" onClick={() => onPickFile(null)} className="text-sm text-coral hover:underline">Remove image</button>
+              <button type="button" onClick={() => onPickFile(null)} className="text-sm text-lighthouse hover:underline">Remove image</button>
             </div>
           )}
         </div>
@@ -267,7 +267,7 @@ export default function Feed() {
           type="button"
           disabled={!userEmail || !title.trim() || uploading}
           onClick={createPost}
-          aria-busy={uploading} className="w-full sm:w-auto px-6 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          aria-busy={uploading} className="w-full sm:w-auto px-6 py-2 bg-sea text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {uploading ? 'Uploading…' : 'Create Post'}
         </button>
@@ -280,7 +280,7 @@ export default function Feed() {
       </ul>
 
       {err && (
-        <div className="text-coral" aria-live="polite">
+        <div className="text-lighthouse" aria-live="polite">
           {err}
         </div>
       )}
