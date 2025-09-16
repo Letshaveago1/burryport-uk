@@ -4,45 +4,29 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "import:osm": "cross-env DOTENV_CONFIG_PATH=.env.osm node -r dotenv/config scripts/import_osm.js",
-    "import:fhrs": "cross-env DOTENV_CONFIG_PATH=.env.fhrs node -r dotenv/config scripts/import_fhrs.js",
-    "new:day": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/new-day.ps1",
     "dev": "vite",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "build": "tsc -p tsconfig.json --noEmit && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview",
-    "prebuild": "node scripts/generate-sitemap.mjs"
+    "build": "tsc && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@mdx-js/mdx": "^3.1.1",
-    "@mdx-js/react": "^3.1.1",
-    "@supabase/supabase-js": "^2.56.1",
-    "axios": "^1.11.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.8.2"
+    "@supabase/supabase-js": "^2.43.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.3",
+    "vfile": "^6.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
-    "@mdx-js/rollup": "^3.1.1",
-    "@tailwindcss/postcss": "^4.1.13",
-    "@tailwindcss/typography": "^0.5.16",
-    "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.9",
-    "@vitejs/plugin-react": "^5.0.0",
-    "autoprefixer": "^10.4.21",
-    "cross-env": "^10.0.0",
-    "dotenv": "^17.2.1",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "postcss": "^8.5.6",
-    "supabase": "^2.40.7",
+    "@mdx-js/rollup": "^3.0.1",
+    "@tailwindcss/nesting": "^0.0.0-insiders.565cd3e",
+    "@tailwindcss/typography": "^0.5.13",
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
   }
 }
