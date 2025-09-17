@@ -147,7 +147,7 @@ export default function Profile() {
             onChange={e => setUsername(e.target.value)}
             placeholder="yourname"
             autoComplete="nickname"
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm"
+            className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm"
           />
         </label>
 
@@ -162,12 +162,12 @@ export default function Profile() {
               alt={altText}
               className="w-16 h-16 rounded-full object-cover bg-gray-200"
             />
-            <label htmlFor={idAvatar} className="cursor-pointer px-3 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
+            <label htmlFor={idAvatar} className="cursor-pointer px-3 py-2 text-sm border border-sea/30 rounded-md hover:bg-sea/10">
               Change
               <input id={idAvatar} type="file" accept="image/*" className="sr-only" onChange={e => onPickFile(e.target.files?.[0] ?? null)} />
             </label>
             {(avatarUrl || previewUrl) && (
-              <button type="button" onClick={removeCurrentAvatar} title="Remove avatar" className="text-sm text-coral hover:underline">
+              <button type="button" onClick={removeCurrentAvatar} title="Remove avatar" className="text-sm text-lighthouse hover:underline">
                 Remove
               </button>
             )}
@@ -177,11 +177,11 @@ export default function Profile() {
           </div>
         </div>
 
-        <button type="button" onClick={save} disabled={saving} aria-busy={saving} className="w-full sm:w-auto px-6 py-2 bg-charcoal text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
+        <button type="button" onClick={save} disabled={saving} aria-busy={saving} className="w-full sm:w-auto px-6 py-2 bg-sea text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
           {saving ? 'Saving…' : 'Save changes'}
         </button>
 
-        {err && <div className="text-coral" aria-live="polite">{err}</div>}
+        {err && <div className="text-lighthouse" aria-live="polite">{err}</div>}
       </div>
     </div>
   )

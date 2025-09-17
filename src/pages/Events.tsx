@@ -208,30 +208,30 @@ export default function Events() {
       {/* create form */}
       <div className="grid gap-4">
         <label htmlFor={idTitle} className="block text-sm font-medium text-gray-700">Event title
-          <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Beach Clean" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+          <input id={idTitle} value={title} onChange={e=>setTitle(e.target.value)} placeholder="e.g. Beach Clean" className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idDesc} className="block text-sm font-medium text-gray-700">Description
-          <textarea id={idDesc} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What’s happening?" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+          <textarea id={idDesc} value={desc} onChange={e=>setDesc(e.target.value)} placeholder="What’s happening?" className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idVenue} className="block text-sm font-medium text-gray-700">Venue
-          <input id={idVenue} value={venue} onChange={e=>setVenue(e.target.value)} placeholder="e.g. Harbour Square" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+          <input id={idVenue} value={venue} onChange={e=>setVenue(e.target.value)} placeholder="e.g. Harbour Square" className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idStarts} className="block text-sm font-medium text-gray-700">Starts at
-          <input id={idStarts} type="datetime-local" value={starts} onChange={e=>setStarts(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+          <input id={idStarts} type="datetime-local" value={starts} onChange={e=>setStarts(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idEnds} className="block text-sm font-medium text-gray-700">Ends at (optional)
-          <input id={idEnds} type="datetime-local" value={ends} onChange={e=>setEnds(e.target.value)} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+          <input id={idEnds} type="datetime-local" value={ends} onChange={e=>setEnds(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
         <label htmlFor={idLink} className="block text-sm font-medium text-gray-700">Link (optional)
-          <input id={idLink} type="url" value={link} onChange={e=>setLink(e.target.value)} placeholder="https://…" className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+          <input id={idLink} type="url" value={link} onChange={e=>setLink(e.target.value)} placeholder="https://…" className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
         </label>
 
-        <button type="button" disabled={!me || creating} onClick={createEvent} aria-busy={creating} className="w-full sm:w-auto px-6 py-2 bg-sea text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
+        <button type="button" disabled={!me || creating} onClick={createEvent} aria-busy={creating} className="w-full sm:w-auto px-6 py-2 bg-lighthouse text-white font-semibold rounded-md shadow-sm hover:bg-opacity-90 disabled:bg-gray-400 disabled:cursor-not-allowed">
           {creating ? 'Creating…' : 'Create event'}
         </button>
       </div>

@@ -14,4 +14,11 @@
   body {
     @apply bg-sand text-charcoal font-sans;
   }
+
+  /* Custom prose styles for MDX content */
+  .prose h2,
+  .prose h3,
+  .prose h4 {
+    @apply text-sea font-semibold;
+  }
 }

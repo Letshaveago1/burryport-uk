@@ -156,11 +156,11 @@ export default function PostCard({ post }: { post: Post }) {
 
       {/* actions */}
       <div className="flex gap-4 items-center mt-3">
-        <button onClick={toggleLike} className="text-sm text-charcoal hover:text-teal-700">
+        <button onClick={toggleLike} className="text-sm text-charcoal hover:text-sea">
           {liked ? '♥ Unlike' : '♡ Like'} ({likesCount})
         </button>
-        <button onClick={openComments} className="text-sm text-charcoal hover:text-teal-700">
-          {commentsOpen ? 'Hide comments' : `Show ${comments.length > 0 ? comments.length + ' ' : ''}comments`}
+        <button onClick={openComments} className="text-sm text-charcoal hover:text-sea">
+          {commentsOpen ? 'Hide comments' : `Show ${comments.length > 0 ? comments.length + ' ' : ''}Comments`}
         </button>
       </div>
 
@@ -168,13 +168,13 @@ export default function PostCard({ post }: { post: Post }) {
       {commentsOpen && (
         <div className="mt-3 grid gap-3">
           <div className="flex gap-2">
-            <input placeholder="Write a comment…" value={newComment} onChange={e => setNewComment(e.target.value)} className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-teal-500 focus:border-teal-500" />
-            <button onClick={addComment} disabled={!newComment.trim()} className="px-4 py-2 text-sm bg-sand text-charcoal rounded-md hover:bg-opacity-80 disabled:opacity-50">Post</button>
+            <input placeholder="Write a comment…" value={newComment} onChange={e => setNewComment(e.target.value)} className="flex-1 px-3 py-2 text-sm border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea" />
+            <button onClick={addComment} disabled={!newComment.trim()} className="px-4 py-2 text-sm bg-sea text-white rounded-md hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed">Post</button>
           </div>
 
           <ul className="list-none p-0 grid gap-3">
             {comments.map(c => (
-              <li key={c.id} className="p-3 bg-gray-50 border border-gray-200 rounded-md">
+              <li key={c.id} className="p-3 bg-white/50 border border-sea/20 rounded-md">
                 <div className="text-sm">{c.content}</div>
                 <div className="text-xs text-gray-500 mt-1">
                   {new Date(c.created_at).toLocaleString()}

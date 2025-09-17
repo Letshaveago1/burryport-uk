@@ -13,7 +13,12 @@ import type { ReactNode } from 'react'
 import StaticPage from './pages/StaticPage'
 import AdminPages from './pages/AdminPages'
 import RecyclingHub from './pages/RecyclingHub'
-
+import TierComparison from './components/TierComparison'
+import TiersPage from './pages/Tiers'
+import Home from "./pages/Home";
+import OnboardingPage from "./pages/Onboarding";
+import LoginPage from './pages/Login'
+import SignupPage from './pages/Signup'
 
 function ProtectedRoute({
   children,
@@ -51,7 +56,10 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* Child routes of the layout */}
-          <Route index element={<Feed />} />
+          <Route index element={<Home />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignupPage />} />
+          <Route path="feed" element={<Feed />} />
           <Route path="alerts" element={<Alerts />} />
           <Route path="events" element={<Events />} />
           <Route path="businesses" element={<Businesses />} />
@@ -67,6 +75,10 @@ export default function App() {
           ))}
 
           <Route path="recyclingHub" element={<RecyclingHub />} />
+          <Route path="tiers" element={<TiersPage />} />
+          <Route path="start" element={<OnboardingPage />} />
+          {/* Assuming you will create a Login page component */}
+          {/* <Route path="login" element={<LoginPage />} /> */}
 
           <Route path="admin" element={<ProtectedRoute requireModerator><Admin /></ProtectedRoute>} />
           <Route path="AdminPages" element={<ProtectedRoute requireModerator><AdminPages /></ProtectedRoute>} />

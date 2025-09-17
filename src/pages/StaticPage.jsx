@@ -193,28 +193,30 @@ export default function StaticPage({ slug }) {
     : null
 
   return (
-    <div className="mx-auto max-w-screen-sm">
-      <h1 className="text-2xl font-semibold mb-1">{doc.title}</h1>
-      {updated && <div style={{fontSize:12,opacity:0.7, marginBottom:12}}>Last updated {updated}</div>}
+    <div className="p-4 border border-sea/20 rounded-lg">
+      <div className="mx-auto max-w-prose">
+        <h1 className="text-3xl font-bold text-charcoal mb-1">{doc.title}</h1>
+        {updated && <div className="text-xs text-charcoal/70 mb-4">Last updated {updated}</div>}
 
-      <article className="prose prose-neutral max-w-none">
-        <Comp key={slug} components={{ Cite, Img, Gallery }} />
-      </article>
+        <article className="prose prose-neutral max-w-none">
+          <Comp key={slug} components={{ Cite, Img, Gallery }} />
+        </article>
 
-      {Array.isArray(doc.refs) && doc.refs.length > 0 && (
-        <aside style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid #e5e7eb' }}>
-          <h2 style={{ fontSize: 16, fontWeight: 600, margin: '0 0 8px' }}>Sources</h2>
-          <ol style={{ paddingLeft: 18, margin: 0, display: 'grid', gap: 6 }}>
-            {doc.refs.map((r, i) => (
-              <li key={i}>
-                <a href={r.url} target="_blank" rel="noopener nofollow ugc">
-                  {r.title || r.url}
-                </a>
-              </li>
-            ))}
-          </ol>
-        </aside>
-      )}
+        {Array.isArray(doc.refs) && doc.refs.length > 0 && (
+          <aside className="mt-8 pt-4 border-t border-sea/20">
+            <h2 className="text-lg font-semibold text-charcoal mb-2">Sources</h2>
+            <ol className="list-decimal list-inside space-y-2">
+              {doc.refs.map((r, i) => (
+                <li key={i}>
+                  <a href={r.url} target="_blank" rel="noopener nofollow ugc" className="text-sm text-sea hover:underline">
+                    {r.title || r.url}
+                  </a>
+                </li>
+              ))}
+            </ol>
+          </aside>
+        )}
+      </div>
     </div>
   )
 }

@@ -110,7 +110,7 @@ export default function RecyclingHub() {
             <button key={c.slug} onClick={() =>
               setSelectedTags(t => t.includes(c.slug) ? t.filter(s => s!==c.slug) : [...t, c.slug])
             } aria-pressed={on}
-              className={`px-3 py-1 text-sm rounded-full border ${on ? 'bg-sea/20 text-sea border-sea/30' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>
+              className={`px-3 py-1 text-sm rounded-full border ${on ? 'bg-sea text-white border-sea' : 'border-sea/30 hover:bg-sea/10'}`}>
               {c.label}
             </button>
           )
@@ -120,8 +120,7 @@ export default function RecyclingHub() {
           return (
             <button key={k} onClick={() =>
               setKindsFilter(kf => kf.includes(k) ? kf.filter(x => x!==k) : [...kf, k])
-            } aria-pressed={on}
-              className={`px-3 py-1 text-sm rounded-full border border-dashed ${on ? 'bg-indigo-100 text-indigo-800 border-indigo-200' : 'bg-white border-gray-300 hover:bg-gray-50'}`}>
+            } aria-pressed={on} className={`px-3 py-1 text-sm rounded-full border border-dashed ${on ? 'bg-pine text-white border-pine' : 'border-pine/30 hover:bg-pine/10'}`}>
               {k}
             </button>
           )
