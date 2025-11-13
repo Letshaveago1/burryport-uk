@@ -2,6 +2,12 @@ import { supabase } from "./supabaseClient";
 
 const NEXT_KEY = "nextPath";
 
+type Consent = {
+  agreedToTerms: boolean;
+  agreedToPrivacy: boolean;
+  agreedToRules: boolean;
+}
+
 export function setNext(path: string) {
   if (path) localStorage.setItem(NEXT_KEY, path);
 }
@@ -31,8 +37,8 @@ export async function signInWithGoogle(redirectTo?: string) {
   if (error) throw error;
 }
 
-export async function signUpWithEmail(email: string, password: string, options?: { name?: string | null, emailRedirectTo?: string }) {
-  const { error } = await supabase.auth.signUp({
+export async function signUpWithEmail(email: string, password: string, options?: { name?: string | null, emailRedirectTo?: string }, consent?: Consent) {
+  const { data, error } = await supabase.auth.signUp({
     email, password,
     options: {
       emailRedirectTo: options?.emailRedirectTo || `${window.location.origin}/welcome`,
@@ -41,6 +47,22 @@ export async function signUpWithEmail(email: string, password: string, options?:
     }
   });
   if (error) throw error;
+  if (!data.user) throw new Error("Signup completed but no user object was returned.");
+
+  // After user is created, save consent data if it exists
+  if (data.user && consent) {
+    const consentPromises = [];
+    if (consent.agreedToTerms) {
+      consentPromises.push(supabase.from("user_consent").insert({ user_id: data.user.id, doc_key: "terms", version: 1, user_agent: navigator.userAgent }));
+    }
+    if (consent.agreedToPrivacy) {
+      consentPromises.push(supabase.from("user_consent").insert({ user_id: data.user.id, doc_key: "privacy-policy", version: 1, user_agent: navigator.userAgent }));
+    }
+    if (consent.agreedToRules) {
+      consentPromises.push(supabase.from("user_consent").insert({ user_id: data.user.id, doc_key: "rules", version: 1, user_agent: navigator.userAgent }));
+    }
+    await Promise.all(consentPromises.map(p => p.then(res => { if (res.error) throw res.error; })));
+  }
 }
 
 export async function signOut() {

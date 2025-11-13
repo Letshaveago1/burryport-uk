@@ -2,7 +2,15 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { consumeNext, signInWithGoogle, signInWithPassword, signUpWithEmail } from "../lib/auth";
 
-export default function AuthForm({ mode = "signin" }: { mode?: "signin" | "signup" }) {
+type Consent = {
+  agreedToTerms: boolean;
+  agreedToPrivacy: boolean;
+  agreedToRules: boolean;
+}
+
+type Props = { mode?: "signin" | "signup", consent?: Consent }
+
+export default function AuthForm({ mode = "signin", consent }: Props) {
   const nav = useNavigate();
   const location = useLocation();
   const query = new URLSearchParams(location.search);
@@ -21,7 +29,7 @@ export default function AuthForm({ mode = "signin" }: { mode?: "signin" | "signu
         const next = consumeNext("/welcome");
         nav(next);
       } else {
-        await signUpWithEmail(email, pw, { name: query.get("name") });
+        await signUpWithEmail(email, pw, { name: query.get("name") }, consent);
         nav("/welcome?checkEmail=1");
       }
     } catch (e: any) {

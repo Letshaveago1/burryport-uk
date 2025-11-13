@@ -13,12 +13,13 @@ import type { ReactNode } from 'react'
 import StaticPage from './pages/StaticPage'
 import AdminPages from './pages/AdminPages'
 import RecyclingHub from './pages/RecyclingHub'
-import TierComparison from './components/TierComparison'
 import TiersPage from './pages/Tiers'
 import Home from "./pages/Home";
 import OnboardingPage from "./pages/Onboarding";
 import LoginPage from './pages/Login'
 import SignupPage from './pages/Signup'
+import Footer from './components/Footer'
+
 
 function ProtectedRoute({
   children,
@@ -39,20 +40,22 @@ function StaticPageLayout({ slug }: { slug: string }) {
 // A shared layout component for all pages
 function Layout() {
   return (
-    <>
+    <div className="flex flex-col min-h-screen bg-sand text-charcoal">
       <AlertBanner />
       <NavBar />
-      <main className="max-w-4xl mx-auto px-4 py-6">
+      <main className="flex-grow max-w-4xl mx-auto px-4 py-6 w-full">
         {/* Child routes will render here */}
         <Outlet />
       </main>
-    </>
+      <Footer />
+    </div>
   );
 }
 
 export default function App() {
   return (
     <AuthProvider>
+      {/* The outer div has been moved into the Layout component */}
       <Routes>
         <Route path="/" element={<Layout />}>
           {/* Child routes of the layout */}
@@ -66,7 +69,10 @@ export default function App() {
           <Route path="profile" element={<Profile />} />
 
           {/* Static Pages */}
-          {['history', 'tourism', 'wildlife', 'earhart', 'harbour', 'faq', 'transport', 'schools', 'pembrey-country-park'].map(slug => (
+          {[
+            'history', 'tourism', 'wildlife', 'earhart', 'harbour', 'faq', 'transport', 'schools', 'pembrey-country-park',
+            'terms', 'privacy-policy', 'rules'
+          ].map(slug => (
             <Route
               key={slug}
               path={slug}
@@ -77,8 +83,6 @@ export default function App() {
           <Route path="recyclingHub" element={<RecyclingHub />} />
           <Route path="tiers" element={<TiersPage />} />
           <Route path="start" element={<OnboardingPage />} />
-          {/* Assuming you will create a Login page component */}
-          {/* <Route path="login" element={<LoginPage />} /> */}
 
           <Route path="admin" element={<ProtectedRoute requireModerator><Admin /></ProtectedRoute>} />
           <Route path="AdminPages" element={<ProtectedRoute requireModerator><AdminPages /></ProtectedRoute>} />
