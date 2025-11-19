@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { consumeNext, signInWithGoogle, signInWithPassword, signUpWithEmail } from "../lib/auth";
+import { consumeNext, signInWithGoogle, signInWithPassword, signUpWithEmail } from "../../lib/auth";
 
 type Consent = {
   agreedToTerms: boolean;
@@ -55,11 +55,11 @@ export default function AuthForm({ mode = "signin", consent }: Props) {
     <div className="grid gap-3 max-w-md">
       <label>
         <span className="block text-sm font-medium text-gray-700">Email</span>
-        <input type="email" value={email} onChange={e=>setEmail(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
       </label>
       <label>
         <span className="block text-sm font-medium text-gray-700">Password</span>
-        <input type="password" value={pw} onChange={e=>setPw(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
+        <input type="password" value={pw} onChange={e => setPw(e.target.value)} className="mt-1 block w-full px-3 py-2 bg-white/70 border border-sea/30 rounded-md shadow-sm placeholder-charcoal/50 focus:outline-none focus:ring-sea focus:border-sea sm:text-sm" />
       </label>
       {err && <div className="text-lighthouse text-sm">{err}</div>}
       <div className="flex gap-2">

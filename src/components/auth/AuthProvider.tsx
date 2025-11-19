@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { supabase } from '../../lib/supabaseClient'
 
 type Profile = { user_id: string; username: string | null; avatar_url: string | null; is_moderator?: boolean | null }
 type Ctx = {
@@ -9,7 +9,7 @@ type Ctx = {
   isModerator: boolean
 }
 
-const AuthCtx = createContext<Ctx>({ ready:false, session:null, profile:null, isModerator:false })
+const AuthCtx = createContext<Ctx>({ ready: false, session: null, profile: null, isModerator: false })
 export const useAuth = () => useContext(AuthCtx)
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -30,20 +30,20 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }
 
   useEffect(() => {
-    let unsub = () => {}
-    ;(async () => {
-      const { data } = await supabase.auth.getSession()
-      setSession(data.session || null)
-      if (data.session?.user?.id) await loadProfile(data.session.user.id)
-      setReady(true)
+    let unsub = () => { }
+      ; (async () => {
+        const { data } = await supabase.auth.getSession()
+        setSession(data.session || null)
+        if (data.session?.user?.id) await loadProfile(data.session.user.id)
+        setReady(true)
 
-      const sub = supabase.auth.onAuthStateChange((_e, newSession) => {
-        setSession(newSession)
-        if (newSession?.user?.id) loadProfile(newSession.user.id)
-        else { setProfile(null); setIsModerator(false) }
-      })
-      unsub = () => sub.data.subscription.unsubscribe()
-    })()
+        const sub = supabase.auth.onAuthStateChange((_e, newSession) => {
+          setSession(newSession)
+          if (newSession?.user?.id) loadProfile(newSession.user.id)
+          else { setProfile(null); setIsModerator(false) }
+        })
+        unsub = () => sub.data.subscription.unsubscribe()
+      })()
     return () => unsub()
   }, [])
 

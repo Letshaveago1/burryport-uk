@@ -2,14 +2,13 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'], // Example of setting a custom font
+        sand: '#f5f5dc',
+        charcoal: '#36454f',
       },
     },
   },

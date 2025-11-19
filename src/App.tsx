@@ -1,14 +1,14 @@
 // src/App.tsx
 import { Route, Routes, Navigate, Outlet } from 'react-router-dom'
-import { AlertBanner } from './components/AlertBannerComponent'
-import NavBar from './components/NavBar'
+import { AlertBanner } from './components/layout/AlertBanner'
+import NavBar from './components/layout/NavBar'
 import Feed from './pages/Feed'
 import Alerts from './pages/Alerts'
 import Events from './pages/Events'
 import Businesses from './pages/Businesses'
 import Admin from './pages/Admin'
 import Profile from './pages/Profile'
-import AuthProvider, { useAuth } from './components/AuthProvider'
+import AuthProvider, { useAuth } from './components/auth/AuthProvider'
 import type { ReactNode } from 'react'
 import StaticPage from './pages/StaticPage'
 import AdminPages from './pages/AdminPages'
@@ -18,7 +18,7 @@ import Home from "./pages/Home";
 import OnboardingPage from "./pages/Onboarding";
 import LoginPage from './pages/Login'
 import SignupPage from './pages/Signup'
-import Footer from './components/Footer'
+import Footer from './components/layout/Footer'
 
 
 function ProtectedRoute({

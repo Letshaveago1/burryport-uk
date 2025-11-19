@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import { useAuth } from '../components/AuthProvider'
+import { useAuth } from '../components/auth/AuthProvider'
 
 // 👇 NEW: SEO helpers
 import { useHead } from '../lib/seo'
@@ -50,7 +50,7 @@ function pickCoverUrl(images: unknown): string | null {
     if (typeof images === 'object' && images && 'url' in (images as any)) {
       return (images as { url?: string }).url ?? null
     }
-  } catch {}
+  } catch { }
   return null
 }
 
@@ -201,7 +201,7 @@ export default function Businesses() {
     })
 
     return [itemList, ...perBiz]
-  }, [JSON.stringify(rows)])
+  }, [rows, canonical])
 
   const ogImage = `${siteBase}/og/default.jpg`
 
@@ -224,7 +224,7 @@ export default function Businesses() {
   return (
     <div className="space-y-6">
       <h2 className="text-3xl font-bold text-charcoal">Businesses</h2>
-      
+
       <ul className="list-none p-0 flex flex-col gap-4">
         {rows.map((b) => {
           const rawCover = pickCoverUrl(b.images as unknown)

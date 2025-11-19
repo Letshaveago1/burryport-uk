@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { setNext } from "../lib/auth";
+import { setNext } from "../../lib/auth";
 import { useAuth } from "./AuthProvider";
 
 export default function RequireAuth({ children, next = window.location.pathname }: { children: ReactNode; next?: string }) {

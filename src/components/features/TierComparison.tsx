@@ -1,6 +1,6 @@
 // src/components/TierComparison.tsx
 import { useEffect, useState, useMemo } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { supabase } from "../../lib/supabaseClient";
 
 type TierRow = {
   code: "visitor" | "local" | "business";
@@ -9,7 +9,7 @@ type TierRow = {
   privileges: Record<string, boolean | number | string>;
 };
 
-const LABELS: Record<string,string> = {
+const LABELS: Record<string, string> = {
   requires_login: "Requires login",
   requires_approval: "Approval needed",
   locality_requirement: "Local connection required",

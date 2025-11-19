@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import AuthForm from "../components/AuthForm";
+import AuthForm from "../components/auth/AuthForm";
 
-export default function SignupPage(){
+export default function SignupPage() {
   const [searchParams] = useSearchParams();
 
   // Read consent flags from the URL, default to false if not present

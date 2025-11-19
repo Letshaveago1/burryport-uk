@@ -1,5 +1,5 @@
 import StaticPage from "./StaticPage";
-import TierComparison from "../components/TierComparison";
+import TierComparison from "../components/features/TierComparison";
 
 export default function TiersPage() {
   return (

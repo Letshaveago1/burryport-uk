@@ -1,6 +1,6 @@
 // src/components/AlertBannerComponent.tsx
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { supabase } from '../../lib/supabaseClient'
 
 type BannerAlert = {
   id: number
@@ -38,7 +38,7 @@ export function AlertBanner() {
   const persistHidden = (s: Set<number>) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(s)))
-    } catch {}
+    } catch { }
   }
 
   const stillValid = (a: BannerAlert) =>

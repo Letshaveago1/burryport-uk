@@ -1,7 +1,7 @@
 // src/pages/Feed.tsx
 import { useEffect, useId, useState } from 'react'
 import { supabase } from '../lib/supabaseClient'
-import RequireAuth from '../components/RequireAuth'
+import RequireAuth from '../components/auth/RequireAuth'
 import { useSessionEmail } from '../hooks/useSession'
 import { signOut as doSignOut } from '../lib/auth'
 
@@ -155,7 +155,7 @@ export default function Feed() {
         if (images[0]?.url) {
           const url = new URL(images[0].url)
           const key = decodeURIComponent(url.pathname.split('/object/public/post-images/')[1] || '')
-          if (key) await supabase.storage.from('post-images').remove([key]).catch(() => {})
+          if (key) await supabase.storage.from('post-images').remove([key]).catch(() => { })
         }
         throw error
       }

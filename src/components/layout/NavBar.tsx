@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
-import { useAuth } from './AuthProvider'
+import { useAuth } from '../auth/AuthProvider'
 
 export default function NavBar() {
   const { pathname } = useLocation()
@@ -50,7 +50,7 @@ export default function NavBar() {
         >
           {/* simple hamburger icon */}
           <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M3 6h18M3 12h18M3 18h18" stroke="#111" strokeWidth="2" strokeLinecap="round"/>
+            <path d="M3 6h18M3 12h18M3 18h18" stroke="#111" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
 
